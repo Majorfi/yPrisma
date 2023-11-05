@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {PRISMA_AIRDROP_DISTRIBUTOR_ABI} from 'utils/abi/distributor.abi';
 import {claimVECRVAirdrop, EARLY_AIRDROP_ADDRESS} from 'utils/actions';
-import {type Hex, hexToNumber, zeroAddress} from 'viem';
+import {type Hex, hexToNumber} from 'viem';
 import {useContractRead} from 'wagmi';
 import {Button} from '@yearn-finance/web-lib/components/Button';
 import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
@@ -30,7 +30,7 @@ function ClaimEarlyAirdrop(props: {
 		address: EARLY_AIRDROP_ADDRESS,
 		abi: PRISMA_AIRDROP_DISTRIBUTOR_ABI,
 		functionName: 'merkleRoot',
-		select: (data): boolean => data !== zeroAddress,
+		select: (data): boolean => data !== `0x0000000000000000000000000000000000000000000000000000000000000000`,
 		watch: true
 	});
 
