@@ -29,6 +29,7 @@ function ClaimEarlyAirdrop(props: {
 	const {data: isAlive} = useContractRead({
 		address: EARLY_AIRDROP_ADDRESS,
 		abi: PRISMA_AIRDROP_DISTRIBUTOR_ABI,
+		chainId: 1,
 		functionName: 'merkleRoot',
 		select: (data): boolean => data !== `0x0000000000000000000000000000000000000000000000000000000000000000`,
 		watch: true
@@ -37,6 +38,7 @@ function ClaimEarlyAirdrop(props: {
 	const {data: isClaimed, refetch} = useContractRead({
 		address: EARLY_AIRDROP_ADDRESS,
 		abi: PRISMA_AIRDROP_DISTRIBUTOR_ABI,
+		chainId: 1,
 		functionName: 'isClaimed',
 		args: [toBigInt(props.claim?.index || 0n)],
 		enabled: !!props.claim
