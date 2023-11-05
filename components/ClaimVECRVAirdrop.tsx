@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {PRISMA_AIRDROP_DISTRIBUTOR_ABI} from 'utils/abi/distributor.abi';
 import {claimVECRVAirdrop, VECRV_AIRDROP_ADDRESS} from 'utils/actions';
-import {type Hex, hexToNumber} from 'viem';
+import {type Hex, hexToNumber, zeroAddress} from 'viem';
 import {useContractRead} from 'wagmi';
 import {Button} from '@yearn-finance/web-lib/components/Button';
 import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
@@ -23,8 +23,16 @@ function ClaimVECRVAirdrop(props: {
 	claim: TClaim | undefined;
 	onSuccess: VoidFunction;
 }): ReactElement {
-	const {provider} = useWeb3();
+	const {provider, openLoginModal} = useWeb3();
 	const [txStatus, set_txStatus] = useState(defaultTxStatus);
+
+	const {data: isAlive} = useContractRead({
+		address: VECRV_AIRDROP_ADDRESS,
+		abi: PRISMA_AIRDROP_DISTRIBUTOR_ABI,
+		functionName: 'merkleRoot',
+		select: (data): boolean => data !== zeroAddress,
+		watch: true
+	});
 
 	const {data: isClaimed, refetch} = useContractRead({
 		address: VECRV_AIRDROP_ADDRESS,
@@ -35,6 +43,9 @@ function ClaimVECRVAirdrop(props: {
 	});
 
 	const onClaimVECRVAirdrop = useCallback(async (): Promise<void> => {
+		if (!provider) {
+			return openLoginModal();
+		}
 		if (!props.claim) {
 			return;
 		}
@@ -57,7 +68,7 @@ function ClaimVECRVAirdrop(props: {
 			refetch();
 			props.onSuccess();
 		}
-	}, [props, provider, refetch]);
+	}, [openLoginModal, props, provider, refetch]);
 
 	return (
 		<div className={'mr-0 pb-4 md:mr-2 md:pb-0'}>
@@ -76,7 +87,11 @@ function ClaimVECRVAirdrop(props: {
 						isBusy={txStatus.pending}
 						isDisabled={!props.claim || !props.hasCheckedEligibility}
 						onClick={onClaimVECRVAirdrop}>
-						{!props.hasCheckedEligibility
+						{!isAlive
+							? 'Voter Airdrop is not live yet'
+							: !provider
+							? 'Connect Wallet'
+							: !props.hasCheckedEligibility
 							? 'Check eligibility first bro.'
 							: props.claim
 							? isClaimed
