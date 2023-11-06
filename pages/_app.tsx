@@ -2,6 +2,7 @@ import React from 'react';
 import localFont from 'next/font/local';
 import AppWrapper from 'components/common/AppWrapper';
 import {mainnet} from 'wagmi/chains';
+import {Analytics} from '@vercel/analytics/react';
 import {WithYearn} from '@yearn-finance/web-lib/contexts/WithYearn';
 import {cl} from '@yearn-finance/web-lib/utils/cl';
 import {localhost} from '@yearn-finance/web-lib/utils/wagmi/networks';
@@ -55,6 +56,7 @@ function MyApp(props: AppProps): ReactElement {
 					<AppWrapper {...props} />
 				</main>
 			</WithYearn>
+			<Analytics />
 		</>
 	);
 }
