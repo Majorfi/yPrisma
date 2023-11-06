@@ -52,10 +52,6 @@ function ClaimVECRVAirdrop(props: {
 			return;
 		}
 		set_txStatus({...defaultTxStatus, pending: true});
-		setTimeout((): void => {
-			props.onSuccess();
-			set_txStatus({...defaultTxStatus, success: true});
-		}, 1000);
 
 		const result = await claimVECRVAirdrop({
 			connector: provider,
