@@ -44,7 +44,7 @@ function AboutCopy(): ReactElement {
 				<div className={'mt-2 flex flex-col space-y-2 text-neutral-900/80'}>
 					<p>
 						{
-							'Good question anon. The Prisma airdrop comes as a locked position that cannot be transferred until the lock (of up to 1 year) exires.'
+							'Good question anon. The Prisma airdrop comes as a locked position that cannot be transferred until the lock (of up to 1 year) expires.'
 						}
 					</p>
 					<p>
