@@ -15,7 +15,7 @@ import type {ReactElement} from 'react';
 type TClaim = {
 	amount: Hex;
 	index: number;
-	proof: Hex[];
+	proof: [Hex[], Hex[]];
 };
 
 function ClaimVECRVAirdrop(props: {

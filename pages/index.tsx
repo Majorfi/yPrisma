@@ -18,7 +18,7 @@ import type {TDict} from '@yearn-finance/web-lib/types';
 type TClaim = {
 	amount: Hex;
 	index: number;
-	proof: Hex[];
+	proof: [Hex[], Hex[]];
 };
 function AboutHeading(): ReactElement {
 	return (

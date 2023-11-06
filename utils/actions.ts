@@ -15,7 +15,7 @@ export const EARLY_AIRDROP_ADDRESS = '0x2C533357664d8750e5F851f39B2534147F5578af
 type TClaimAirdrop = TWriteTransaction & {
 	index: bigint;
 	amount: bigint;
-	merkleProof: Hex[];
+	merkleProof: [Hex[], Hex[]];
 };
 export async function claimVECRVAirdrop(props: TClaimAirdrop): Promise<TTxResponse> {
 	assert(props.connector, 'No connector');
