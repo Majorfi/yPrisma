@@ -4,6 +4,7 @@ import AddressInput from 'components/common/AddressInput';
 import {useUpdateEffect} from '@react-hookz/web';
 import {Button} from '@yearn-finance/web-lib/components/Button';
 import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
+import {toAddress} from '@yearn-finance/web-lib/utils/address';
 
 import type {TInputAddressLike} from 'components/common/AddressInput';
 import type {Dispatch, ReactElement, SetStateAction} from 'react';
@@ -16,7 +17,12 @@ function AddressChecker(props: {
 	const {address} = useWeb3();
 
 	useUpdateEffect((): void => {
-		if (address) {
+		if (
+			address &&
+			(props.receiver.address !== address ||
+				props.receiver.address === toAddress('') ||
+				props.receiver.address === undefined)
+		) {
 			props.set_receiver({address, label: address, isValid: true});
 		}
 	}, [address]);
