@@ -9,8 +9,8 @@ import type {TWriteTransaction} from '@yearn-finance/web-lib/utils/wagmi/provide
 import type {TTxResponse} from '@yearn-finance/web-lib/utils/web3/transaction';
 
 export const YEARN_VOTER_ADDRESS = '0x90be6DFEa8C80c184C442a36e17cB2439AAE25a7';
-export const VECRV_AIRDROP_ADDRESS = '0xd49d86B001Fe35bc745Bc6E467B3cc18Cb14b817';
-export const EARLY_AIRDROP_ADDRESS = '0x4Bd112ffF755C24C103AdF5879ee914781b99c62';
+export const VECRV_AIRDROP_ADDRESS = '0x3ea03249B4D68Be92a8eda027C5ac12e6E419BEE';
+export const EARLY_AIRDROP_ADDRESS = '0x2C533357664d8750e5F851f39B2534147F5578af';
 
 type TClaimAirdrop = TWriteTransaction & {
 	index: bigint;
