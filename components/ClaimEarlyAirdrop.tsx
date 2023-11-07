@@ -92,7 +92,7 @@ function ClaimEarlyAirdrop(props: {
 							: props.claim
 							? isClaimed
 								? 'Already claimed'
-								: `Claim`
+								: `Claim as yPRISMA`
 							: 'Oh no! You have nothing to claim'}
 					</Button>
 				</div>
