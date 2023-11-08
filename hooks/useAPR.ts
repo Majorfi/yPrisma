@@ -1,9 +1,9 @@
 import {useMemo} from 'react';
 import {YPRISMA_STAKING_ABI} from 'utils/abi/stakingContract.abi';
 import {DEFAULT_CHAIN_ID, PRISMA_ADDRESS, REWARD_TOKEN_ADDRESS, YPRISMA_STAKING_ADDRESS} from 'utils/actions';
+import {yDaemonPricesSchema} from 'utils/yDaemonPricesSchema';
 import {useContractReads} from 'wagmi';
 import {toBigInt, toNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
-import {yDaemonPricesSchema} from '@yearn-finance/web-lib/utils/schemas/yDaemonPricesSchema';
 
 import {useFetch} from './useFetch';
 import {useYDaemonBaseURI} from './useYDaemonBaseURI';

@@ -14,6 +14,7 @@ import {
 	YPRISMA_ADDRESS,
 	YPRISMA_STAKING_ADDRESS
 } from 'utils/actions';
+import {yDaemonPricesSchema} from 'utils/yDaemonPricesSchema';
 import {erc20ABI, useContractRead} from 'wagmi';
 import {Button} from '@yearn-finance/web-lib/components/Button';
 import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
@@ -22,7 +23,6 @@ import {cl} from '@yearn-finance/web-lib/utils/cl';
 import {toBigInt, toNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
 import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
 import {handleInputChangeEventValue} from '@yearn-finance/web-lib/utils/handlers/handleInputChangeEventValue';
-import {yDaemonPricesSchema} from '@yearn-finance/web-lib/utils/schemas/yDaemonPricesSchema';
 import {defaultTxStatus} from '@yearn-finance/web-lib/utils/web3/transaction';
 
 import {AmountInput} from './common/AmountInput';
@@ -151,7 +151,10 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 	 *********************************************************************************************/
 	function renderStakeView(): ReactElement {
 		return (
-			<div className={'col-span-3 flex items-center gap-6 rounded-lg bg-neutral-100'}>
+			<div
+				className={
+					'col-span-1 flex flex-col items-center gap-2 rounded-lg bg-neutral-100 md:col-span-3 md:flex-row md:gap-6'
+				}>
 				<AmountInput
 					label={'Available to stake, yPrisma'}
 					amount={amountToUse}
@@ -185,7 +188,8 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 						<button
 							className={cl(
 								'cursor-pointer rounded-lg p-2 text-xl leading-6',
-								'bg-neutral-100 hover:bg-neutral-200 transition-colors'
+								'bg-neutral-100 hover:bg-neutral-200 transition-colors',
+								'rotate-90 md:rotate-0'
 							)}>
 							&#8646;
 						</button>
@@ -207,11 +211,11 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 						</div>
 					}
 				/>
-				<div className={'mt-[3px]'}>
-					<div className={'flex gap-4'}>
+				<div className={'mt-4 w-full md:mt-[3px] md:w-[316px]'}>
+					<div className={'flex w-full gap-4'}>
 						<Button
 							isBusy={txStatusApprove.pending}
-							className={'min-w-[150px]'}
+							className={'w-1/2 md:w-[150px]'}
 							isDisabled={
 								!isActive ||
 								!amountToUse ||
@@ -224,7 +228,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 						</Button>
 						<Button
 							isBusy={txStatusStake.pending}
-							className={'min-w-[150px]'}
+							className={'w-1/2 md:w-[150px]'}
 							isDisabled={
 								!isActive ||
 								!amountToUse ||
@@ -242,9 +246,12 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 
 	function renderClaimView(): ReactElement {
 		return (
-			<div className={'col-span-3 flex items-center gap-6 rounded-lg bg-neutral-100'}>
+			<div
+				className={
+					'col-span-3 flex flex-col items-center gap-0 rounded-lg bg-neutral-100 md:flex-row md:gap-6'
+				}>
 				<AmountInput
-					label={'Earned amount, wstETH'}
+					label={'Rewards, wstETH'}
 					disabled
 					amount={earned}
 					legend={
@@ -259,11 +266,11 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 						</div>
 					}
 				/>
-				<div className={'mt-[3px]'}>
-					<div className={'flex gap-4'}>
+				<div className={'mt-4 w-full md:mt-[3px] md:w-[316px]'}>
+					<div className={'flex w-full gap-4'}>
 						<Button
 							isBusy={txStatusClaim.pending}
-							className={'min-w-[316px]'}
+							className={'w-full md:w-[316px]'}
 							isDisabled={!isActive || toBigInt(earned?.raw) === 0n}
 							onClick={onClaimRewards}>
 							{'Claim rewards'}
@@ -276,7 +283,10 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 
 	function renderUnstakeView(): ReactElement {
 		return (
-			<div className={'col-span-3 flex items-center gap-6 rounded-lg bg-neutral-100'}>
+			<div
+				className={
+					'col-span-1 flex flex-col items-center gap-2 rounded-lg bg-neutral-100 md:col-span-3 md:flex-row md:gap-6'
+				}>
 				<AmountInput
 					label={'Staked amount'}
 					amount={staked}
@@ -302,7 +312,8 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 						<button
 							className={cl(
 								'cursor-pointer rounded-lg p-2 text-xl leading-6',
-								'bg-neutral-100 hover:bg-neutral-200 transition-colors'
+								'bg-neutral-100 hover:bg-neutral-200 transition-colors',
+								'rotate-90 md:rotate-0'
 							)}>
 							&#8646;
 						</button>
@@ -324,12 +335,12 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 						</div>
 					}
 				/>
-				<div className={'mt-[3px]'}>
-					<div className={'flex gap-4'}>
+				<div className={'mt-4 w-full md:mt-[3px] md:w-[316px]'}>
+					<div className={'flex w-full gap-4'}>
 						<Button
 							key={'unstake button'}
 							isBusy={txStatusUnstake.pending}
-							className={'min-w-[316px]'}
+							className={'w-full md:w-[316px]'}
 							isDisabled={!isActive || !amountToUse || toBigInt(staked?.raw) === 0n}
 							onClick={onUnstakeYPrisma}>
 							{'Unstake + Claim'}
@@ -342,8 +353,8 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 
 	return (
 		<>
-			<div className={cl('col-span-3 w-full items-center rounded-lg bg-neutral-100')}>
-				<div className={'mb-10'}>
+			<div className={'col-span-1 w-full items-center rounded-lg bg-neutral-100 md:col-span-3'}>
+				<div className={'mb-20 md:mb-10'}>
 					{tab === 'stake' && renderStakeView()}
 					{tab === 'unstake' && renderUnstakeView()}
 				</div>
@@ -351,14 +362,14 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 				<div>{renderClaimView()}</div>
 			</div>
 
-			<div className={cl('col-span-3 w-full items-center rounded-lg bg-neutral-100')}>
+			<div className={'col-span-1 w-full items-center rounded-lg bg-neutral-100 md:col-span-3'}>
 				<dl className={'flex flex-col gap-4 rounded-lg bg-neutral-200 p-4 md:p-6'}>
 					<div>
 						<b className={'text-lg'}>{'Your position details'}</b>
 					</div>
 
 					<div className={'flex w-full items-baseline justify-between'}>
-						<dt className={'text-neutral-900/60'}>{'Fancy APR'}</dt>
+						<dt className={'text-xs text-neutral-900/60 md:text-base'}>{'Fancy APR'}</dt>
 						<dd className={'font-number text-lg font-bold leading-6'}>
 							<span
 								suppressHydrationWarning
@@ -373,25 +384,25 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 					</div>
 
 					<div className={'flex w-full items-baseline justify-between'}>
-						<dt className={'text-neutral-900/60'}>{'Available to stake'}</dt>
-						<dd className={'font-number font-bold'}>
+						<dt className={'text-xs text-neutral-900/60 md:text-base'}>{'Available to stake'}</dt>
+						<dd className={'font-number text-sm font-bold md:text-base'}>
 							{formatAmount(availableToStake?.normalized || 0, 6, 6)}
 							<span className={'font-normal text-neutral-900/60'}>{' yPrisma'}</span>
 						</dd>
 					</div>
 
 					<div className={'flex w-full items-baseline justify-between'}>
-						<dt className={'text-neutral-900/60'}>{'Already staked'}</dt>
-						<dd className={'font-number font-bold'}>
+						<dt className={'text-xs text-neutral-900/60 md:text-base'}>{'Already staked'}</dt>
+						<dd className={'font-number text-sm font-bold md:text-base'}>
 							{formatAmount(staked?.normalized || 0, 6, 6)}
 							<span className={'font-normal text-neutral-900/60'}>{' yPrisma'}</span>
 						</dd>
 					</div>
 
 					<div className={'flex w-full items-baseline justify-between'}>
-						<dt className={'text-neutral-900/60'}>{'Amount earned'}</dt>
+						<dt className={'text-xs text-neutral-900/60 md:text-base'}>{'Amount earned'}</dt>
 						<dd>
-							<b className={'font-number block'}>
+							<b className={'font-number block text-sm md:text-base'}>
 								{formatAmount(earned?.normalized || 0, 6, 6)}
 								&nbsp;
 								<span className={'font-normal text-neutral-900/60'}>{' wstETH'}</span>

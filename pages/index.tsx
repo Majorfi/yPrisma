@@ -92,7 +92,7 @@ function AboutCopy({APR}: {APR: number}): ReactElement {
 					</div>
 				</div>
 			</div>
-			<div className={'mb-4'}>
+			<div className={'mb-4 hidden md:block'}>
 				<StakeBanner APR={APR} />
 			</div>
 		</>
@@ -103,6 +103,9 @@ function About({APR}: {APR: number}): ReactElement {
 		<>
 			<section className={'grid grid-cols-1 gap-0 pb-6 md:hidden'}>
 				<AboutHeading />
+				<div className={'mt-6'}>
+					<StakeBanner APR={APR} />
+				</div>
 			</section>
 			<section className={'hidden grid-cols-12 gap-0 md:grid md:pt-12'}>
 				<div className={'col-span-12 md:col-span-8 md:mb-0 md:pr-20'}>
@@ -114,6 +117,7 @@ function About({APR}: {APR: number}): ReactElement {
 
 				<div className={'relative col-span-12 mb-16 hidden items-center justify-center md:col-span-4 md:flex'}>
 					<Image
+						priority
 						alt={''}
 						src={'./prisma.svg'}
 						width={400}
@@ -218,7 +222,7 @@ function SectionStake({APR, currentTab}: {APR: number; currentTab: 'stake' | 'un
 		<section
 			id={'stake'}
 			className={'p-6 pt-0 md:p-10 md:pt-4'}>
-			<div className={'grid grid-cols-1 gap-y-6 md:grid-cols-3'}>
+			<div className={'grid grid-cols-1 gap-y-20 md:grid-cols-3 md:gap-y-6'}>
 				<StakeYPrisma
 					APR={APR}
 					tab={currentTab}
@@ -321,10 +325,10 @@ function Index(): ReactElement {
 								<button
 									onClick={(): void => set_selected(1)}
 									className={cl(
-										'w-36 rounded-lg text-center transition-colors cursor-pointer p-2',
+										'px-4 rounded-lg text-center transition-colors cursor-pointer p-2',
 										selected === 1 ? 'bg-neutral-200' : 'bg-neutral-200/0 hover:bg-neutral-200'
 									)}>
-									<p>{'Farm wstETH'}</p>
+									<p>{'Farm with yPRISMA'}</p>
 								</button>
 							</Link>
 						</div>

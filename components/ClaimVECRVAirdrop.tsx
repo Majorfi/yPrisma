@@ -60,7 +60,7 @@ function ClaimVECRVAirdrop(props: {
 	}, [openLoginModal, props, provider, refetch]);
 
 	return (
-		<div className={'flex flex-col items-center rounded-lg bg-neutral-100 p-2 md:p-6'}>
+		<div className={'mb-6 flex flex-col items-center rounded-lg bg-neutral-100 p-2 md:mb-0 md:p-6'}>
 			<p className={'my-4 text-center md:my-10'}>
 				<b className={'font-number text-xl text-neutral-900 md:text-6xl'}>
 					<Counter value={Number(hexToNumber(props.claim?.amount || '0x0') || 0)} />
