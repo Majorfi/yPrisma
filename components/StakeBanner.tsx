@@ -1,7 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import {Button} from '@yearn-finance/web-lib/components/Button';
-import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
+
+import {PercentCounter} from './AmountCounter';
 
 import type {ReactElement} from 'react';
 
@@ -21,11 +22,12 @@ function StakeBanner(props: {APR: number}): ReactElement {
 						</p>
 					</div>
 
-					<div className={'flex flex-col items-center justify-center'}>
+					<div className={'flex flex-col items-center justify-center md:min-w-[260px]'}>
 						<b
 							suppressHydrationWarning
 							className={'font-number w-full text-center text-3xl text-neutral-900'}>
-							{`${formatAmount(props.APR, 2, 2)}% APR`}
+							<PercentCounter value={props.APR} />
+							{` APR`}
 						</b>
 						<Link
 							className={'mt-2 w-full md:mt-0 md:w-fit'}
