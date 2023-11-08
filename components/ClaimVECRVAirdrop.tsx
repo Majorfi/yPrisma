@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {PRISMA_AIRDROP_DISTRIBUTOR_ABI} from 'utils/abi/distributor.abi';
-import {claimVECRVAirdrop, VECRV_AIRDROP_ADDRESS} from 'utils/actions';
+import {claimVECRVAirdrop, DEFAULT_CHAIN_ID, VECRV_AIRDROP_ADDRESS} from 'utils/actions';
 import {type Hex, hexToNumber} from 'viem';
 import {useContractRead} from 'wagmi';
 import {Button} from '@yearn-finance/web-lib/components/Button';
@@ -26,19 +26,10 @@ function ClaimVECRVAirdrop(props: {
 	const {provider, openLoginModal} = useWeb3();
 	const [txStatus, set_txStatus] = useState(defaultTxStatus);
 
-	const {data: isAlive} = useContractRead({
-		address: VECRV_AIRDROP_ADDRESS,
-		abi: PRISMA_AIRDROP_DISTRIBUTOR_ABI,
-		chainId: 1,
-		functionName: 'merkleRoot',
-		select: (data): boolean => data !== `0x0000000000000000000000000000000000000000000000000000000000000000`,
-		watch: true
-	});
-
 	const {data: isClaimed, refetch} = useContractRead({
 		address: VECRV_AIRDROP_ADDRESS,
 		abi: PRISMA_AIRDROP_DISTRIBUTOR_ABI,
-		chainId: 1,
+		chainId: DEFAULT_CHAIN_ID,
 		functionName: 'isClaimed',
 		args: [toBigInt(props.claim?.index || 0n)],
 		enabled: !!props.claim
@@ -55,7 +46,7 @@ function ClaimVECRVAirdrop(props: {
 
 		const result = await claimVECRVAirdrop({
 			connector: provider,
-			chainID: 1,
+			chainID: DEFAULT_CHAIN_ID,
 			contractAddress: VECRV_AIRDROP_ADDRESS,
 			index: toBigInt(props.claim.index),
 			amount: toBigInt(hexToNumber(props.claim.amount || '0x0')),
@@ -69,35 +60,31 @@ function ClaimVECRVAirdrop(props: {
 	}, [openLoginModal, props, provider, refetch]);
 
 	return (
-		<div className={'mr-0 pb-4 md:mr-2 md:pb-0'}>
-			<div className={'flex flex-col items-center rounded-lg bg-neutral-100 p-2 md:p-6'}>
-				<p className={'my-4 text-center md:my-10'}>
-					<b className={'font-number text-xl text-neutral-900 md:text-6xl'}>
-						<Counter value={Number(hexToNumber(props.claim?.amount || '0x0') || 0)} />
-					</b>
-					<span className={'block pt-2 text-xs text-neutral-900/60 md:text-base'}>
-						{'yPrisma from your veCRV votes'}
-					</span>
-				</p>
-				<div>
-					<Button
-						className={'min-w-[200px]'}
-						isBusy={txStatus.pending}
-						isDisabled={!props.claim || !props.hasCheckedEligibility}
-						onClick={onClaimVECRVAirdrop}>
-						{!isAlive
-							? 'Voter Airdrop is not live yet'
-							: !provider
-							? 'Connect Wallet'
-							: !props.hasCheckedEligibility
-							? 'Check eligibility first bro.'
-							: props.claim
-							? isClaimed
-								? 'Already claimed'
-								: `Claim as yPRISMA`
-							: 'Oh no! You have nothing to claim'}
-					</Button>
-				</div>
+		<div className={'flex flex-col items-center rounded-lg bg-neutral-100 p-2 md:p-6'}>
+			<p className={'my-4 text-center md:my-10'}>
+				<b className={'font-number text-xl text-neutral-900 md:text-6xl'}>
+					<Counter value={Number(hexToNumber(props.claim?.amount || '0x0') || 0)} />
+				</b>
+				<span className={'block pt-2 text-xs text-neutral-900/60 md:text-base'}>
+					{'yPrisma from your veCRV votes'}
+				</span>
+			</p>
+			<div>
+				<Button
+					className={'min-w-[200px]'}
+					isBusy={txStatus.pending}
+					isDisabled={!props.claim || !props.hasCheckedEligibility}
+					onClick={onClaimVECRVAirdrop}>
+					{!provider
+						? 'Connect Wallet'
+						: !props.hasCheckedEligibility
+						? 'Check eligibility first bro.'
+						: props.claim
+						? isClaimed
+							? 'Already claimed'
+							: `Claim as yPRISMA`
+						: 'Oh no! You have nothing to claim'}
+				</Button>
 			</div>
 		</div>
 	);

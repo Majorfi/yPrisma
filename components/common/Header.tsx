@@ -84,7 +84,10 @@ function WalletSelector(): ReactElement {
 	);
 }
 
-const nav: TMenu[] = [{path: 'https://yearn.fi', label: 'Yearn.fi', target: '_blank'}];
+const nav: TMenu[] = [
+	{path: '/', label: 'Home'},
+	{path: '/about', label: 'About'}
+];
 
 function AppHeader(): ReactElement {
 	const {pathname} = useRouter();

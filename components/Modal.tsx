@@ -73,15 +73,17 @@ function SuccessModal({isOpen, set_isOpen}: {isOpen: boolean; set_isOpen: (isOpe
 												}
 											</p>
 
-											<p className={'mt-2 font-bold'}>{'You can farm more tokens with Yearn!'}</p>
+											<p className={'mt-2 font-bold'}>
+												{'You can now stake it with Yearn to get even more tokens!'}
+											</p>
 										</div>
 									</div>
 								</div>
 								<div className={'mt-10 flex items-center justify-center text-center'}>
 									<Link
-										href={'https://yearn.fi'}
+										href={'/?tab=stake'}
 										passHref>
-										<Button>{'Take me to Yearn'}</Button>
+										<Button>{'Stake it for a fancy APR!'}</Button>
 									</Link>
 								</div>
 							</Dialog.Panel>

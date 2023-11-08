@@ -86,60 +86,63 @@ function AddressInput({
 	);
 
 	return (
-		<div className={'flex h-10 w-full items-center rounded-md bg-neutral-300 p-2 transition-colors'}>
-			<input
-				aria-invalid={status === 'invalid'}
-				onFocus={async (): Promise<void> => {
-					isFocused.current = true;
-					onChange(value.label);
-				}}
-				onBlur={(): void => {
-					isFocused.current = false;
-				}}
-				onChange={async (e): Promise<void> => onChange(e.target.value)}
-				required
-				autoComplete={'off'}
-				spellCheck={false}
-				placeholder={'0x...'}
-				type={'text'}
-				value={value.label}
-				className={
-					'w-full overflow-x-scroll truncate border-none bg-transparent px-0 py-4 pr-2 font-mono text-sm font-bold outline-none scrollbar-none'
-				}
-			/>
-			<label
-				className={
-					status === 'invalid' || status === 'warning'
-						? 'relative pr-4'
-						: 'pointer-events-none relative h-4 w-4 pr-4'
-				}>
-				<span className={status === 'invalid' || status === 'warning' ? 'tooltip' : 'pointer-events-none'}>
-					<div className={'pointer-events-none relative h-4 w-4'}>
-						<IconCheck
-							className={`absolute h-4 w-4 text-[#16a34a] transition-opacity ${
-								status === 'valid' ? 'opacity-100' : 'opacity-0'
-							}`}
-						/>
-						<IconCircleCross
-							className={`absolute h-4 w-4 text-[#e11d48] transition-opacity ${
-								status === 'invalid' ? 'opacity-100' : 'opacity-0'
-							}`}
-						/>
-						<div className={'absolute inset-0 flex items-center justify-center'}>
-							<IconLoader
-								className={`h-4 w-4 animate-spin text-neutral-900 transition-opacity ${
-									status === 'pending' ? 'opacity-100' : 'opacity-0'
+		<>
+			<div className={'flex h-10 w-full items-center rounded-md bg-neutral-200 p-2 transition-colors'}>
+				<input
+					aria-invalid={status === 'invalid'}
+					onFocus={async (): Promise<void> => {
+						isFocused.current = true;
+						onChange(value.label);
+					}}
+					onBlur={(): void => {
+						isFocused.current = false;
+					}}
+					onChange={async (e): Promise<void> => onChange(e.target.value)}
+					required
+					autoComplete={'off'}
+					spellCheck={false}
+					placeholder={'0x...'}
+					type={'text'}
+					value={value.label}
+					className={
+						'w-full overflow-x-scroll truncate border-none bg-transparent px-0 py-4 pr-2 font-mono text-sm font-bold outline-none scrollbar-none'
+					}
+				/>
+				<label
+					className={
+						status === 'invalid' || status === 'warning'
+							? 'relative pr-4'
+							: 'pointer-events-none relative h-4 w-4 pr-4'
+					}>
+					<span className={status === 'invalid' || status === 'warning' ? 'tooltip' : 'pointer-events-none'}>
+						<div className={'pointer-events-none relative h-4 w-4'}>
+							<IconCheck
+								className={`absolute h-4 w-4 text-[#16a34a] transition-opacity ${
+									status === 'valid' ? 'opacity-100' : 'opacity-0'
 								}`}
 							/>
+							<IconCircleCross
+								className={`absolute h-4 w-4 text-[#e11d48] transition-opacity ${
+									status === 'invalid' ? 'opacity-100' : 'opacity-0'
+								}`}
+							/>
+							<div className={'absolute inset-0 flex items-center justify-center'}>
+								<IconLoader
+									className={`h-4 w-4 animate-spin text-neutral-900 transition-opacity ${
+										status === 'pending' ? 'opacity-100' : 'opacity-0'
+									}`}
+								/>
+							</div>
 						</div>
-					</div>
-					<span className={'tooltiptextsmall'}>
-						{status === 'invalid' && 'This address is invalid'}
-						{status === 'warning' && 'This address is already in use'}
+						<span className={'tooltiptextsmall'}>
+							{status === 'invalid' && 'This address is invalid'}
+							{status === 'warning' && 'This address is already in use'}
+						</span>
 					</span>
-				</span>
-			</label>
-		</div>
+				</label>
+			</div>
+			<legend className={`mt-1 pl-1 text-xs md:mr-0`}>&nbsp;</legend>
+		</>
 	);
 }
 

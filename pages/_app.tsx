@@ -1,7 +1,7 @@
 import React from 'react';
 import localFont from 'next/font/local';
 import AppWrapper from 'components/common/AppWrapper';
-import {mainnet} from 'wagmi/chains';
+import {mainnet, optimism} from 'wagmi/chains';
 import {Analytics} from '@vercel/analytics/react';
 import {WithYearn} from '@yearn-finance/web-lib/contexts/WithYearn';
 import {cl} from '@yearn-finance/web-lib/utils/cl';
@@ -45,7 +45,7 @@ function MyApp(props: AppProps): ReactElement {
 				}
 			`}</style>
 			<WithYearn
-				supportedChains={[mainnet, localhost]}
+				supportedChains={[mainnet, optimism, localhost]}
 				options={{
 					baseSettings: {
 						yDaemonBaseURI: process.env.YDAEMON_BASE_URI as string
