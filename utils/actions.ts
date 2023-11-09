@@ -90,6 +90,8 @@ export async function claimEarlyAirdrop(props: TClaimAirdrop): Promise<TTxRespon
 	assertAddress(EARLY_AIRDROP_ADDRESS, 'EARLY_AIRDROP_ADDRESS');
 	const wagmiProvider = await toWagmiProvider(props.connector);
 
+	console.warn(wagmiProvider.address, YEARN_VOTER_ADDRESS, props.index, props.amount, props.merkleProof);
+
 	return await handleTx(props, {
 		address: EARLY_AIRDROP_ADDRESS,
 		abi: PRISMA_AIRDROP_DISTRIBUTOR_ABI,

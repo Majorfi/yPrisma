@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {PRISMA_AIRDROP_DISTRIBUTOR_ABI} from 'utils/abi/distributor.abi';
-import {claimVECRVAirdrop, DEFAULT_CHAIN_ID, EARLY_AIRDROP_ADDRESS} from 'utils/actions';
+import {claimEarlyAirdrop, DEFAULT_CHAIN_ID, EARLY_AIRDROP_ADDRESS} from 'utils/actions';
 import {type Hex, hexToNumber} from 'viem';
 import {useContractRead} from 'wagmi';
 import {Button} from '@yearn-finance/web-lib/components/Button';
@@ -43,14 +43,14 @@ function ClaimEarlyAirdrop(props: {
 		enabled: !!props.claim
 	});
 
-	const onClaimVECRVAirdrop = useCallback(async (): Promise<void> => {
+	const onClaimEarlyAirdrop = useCallback(async (): Promise<void> => {
 		if (!provider) {
 			return openLoginModal();
 		}
 		if (!props.claim) {
 			return;
 		}
-		const result = await claimVECRVAirdrop({
+		const result = await claimEarlyAirdrop({
 			connector: provider,
 			chainID: DEFAULT_CHAIN_ID,
 			contractAddress: EARLY_AIRDROP_ADDRESS,
@@ -80,7 +80,7 @@ function ClaimEarlyAirdrop(props: {
 					className={'min-w-[200px] border-none'}
 					isBusy={txStatus.pending}
 					isDisabled={!props.claim || !props.hasCheckedEligibility || isClaimed || !isAlive}
-					onClick={onClaimVECRVAirdrop}>
+					onClick={onClaimEarlyAirdrop}>
 					{!isAlive
 						? 'OG Airdrop is not live yet'
 						: !provider
