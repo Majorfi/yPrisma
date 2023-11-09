@@ -5,7 +5,7 @@ import {useFetch} from 'hooks/useFetch';
 import {useYDaemonBaseURI} from 'hooks/useYDaemonBaseURI';
 import {STAKING_ABI} from 'utils/abi/stakingContract.abi';
 import {approveERC20, claimRewards, stake, unstake} from 'utils/actions';
-import {DEFAULT_CHAIN_ID, PRISMA_ADDRESS, YPRISMA_ADDRESS} from 'utils/constants';
+import {DEFAULT_CHAIN_ID} from 'utils/constants';
 import {yDaemonPricesSchema} from 'utils/yDaemonPricesSchema';
 import {erc20ABI, useContractRead} from 'wagmi';
 import {Button} from '@yearn-finance/web-lib/components/Button';
@@ -50,10 +50,8 @@ export function FarmWithToken({
 	const [txStatusClaim, set_txStatusClaim] = useState(defaultTxStatus);
 	const [amountToUse, set_amountToUse] = useState<TNormalizedBN | undefined>(undefined);
 	const {yDaemonBaseUri} = useYDaemonBaseURI({chainID: 1});
-	const stakingPriceAddr = toAddress(stakingToken) === YPRISMA_ADDRESS ? PRISMA_ADDRESS : stakingToken;
-	const rewardPriceAddr = toAddress(rewardToken) === YPRISMA_ADDRESS ? PRISMA_ADDRESS : rewardToken;
 	const {data: prices} = useFetch<TYDaemonPrices>({
-		endpoint: `${yDaemonBaseUri}/prices/some/${stakingPriceAddr},${rewardPriceAddr}?humanized=true`,
+		endpoint: `${yDaemonBaseUri}/prices/some/${stakingToken},${rewardToken}?humanized=true`,
 		schema: yDaemonPricesSchema
 	});
 
@@ -96,7 +94,9 @@ export function FarmWithToken({
 	});
 
 	useEffect((): void => {
-		set_amountToUse(availableToStake);
+		if (toBigInt(availableToStake?.raw) > 0n) {
+			set_amountToUse(availableToStake);
+		}
 	}, [availableToStake]);
 
 	const onChangeInput = useCallback((value: string): void => {
@@ -190,7 +190,7 @@ export function FarmWithToken({
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(amountToUse?.normalized || 0) * Number(prices?.[stakingPriceAddr] || 0)
+									Number(amountToUse?.normalized || 0) * Number(prices?.[stakingToken] || 0)
 								)}`}
 							</p>
 						</div>
@@ -222,7 +222,7 @@ export function FarmWithToken({
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(amountToUse?.normalized || 0) * Number(prices?.[stakingPriceAddr] || 0)
+									Number(amountToUse?.normalized || 0) * Number(prices?.[stakingToken] || 0)
 								)}`}
 							</p>
 						</div>
@@ -277,7 +277,7 @@ export function FarmWithToken({
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(earned?.normalized || 0) * Number(prices?.[rewardPriceAddr] || 0)
+									Number(earned?.normalized || 0) * Number(prices?.[rewardToken] || 0)
 								)}`}
 							</p>
 						</div>
@@ -314,7 +314,7 @@ export function FarmWithToken({
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(staked?.normalized || 0) * Number(prices?.[stakingPriceAddr] || 0)
+									Number(staked?.normalized || 0) * Number(prices?.[stakingToken] || 0)
 								)}`}
 							</p>
 						</div>
@@ -346,7 +346,7 @@ export function FarmWithToken({
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(staked?.normalized || 0) * Number(prices?.[stakingPriceAddr] || 0)
+									Number(staked?.normalized || 0) * Number(prices?.[stakingToken] || 0)
 								)}`}
 							</p>
 						</div>
@@ -428,7 +428,7 @@ export function FarmWithToken({
 							</b>
 							<small className={'font-number block text-right text-xs text-neutral-900/60'}>
 								{`$ ${formatAmount(
-									Number(earned?.normalized) * Number(prices?.[rewardPriceAddr]) || 0,
+									Number(earned?.normalized) * Number(prices?.[rewardToken]) || 0,
 									2,
 									2
 								)}`}

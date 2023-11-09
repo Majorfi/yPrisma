@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
 import {useAccountModal, useChainModal} from '@rainbow-me/rainbowkit';
@@ -7,6 +6,8 @@ import {ModalMobileMenu} from '@yearn-finance/web-lib/components/ModalMobileMenu
 import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
 import {IconWallet} from '@yearn-finance/web-lib/icons/IconWallet';
 import {truncateHex} from '@yearn-finance/web-lib/utils/address';
+
+import {LogoPopover} from './HeaderPopover';
 
 import type {ReactElement} from 'react';
 
@@ -141,14 +142,7 @@ function AppHeader(): ReactElement {
 						</button>
 					</div>
 					<div className={'flex w-1/3 justify-center'}>
-						<Link href={'/'}>
-							<Image
-								src={'/yPrisma.png'}
-								width={40}
-								height={40}
-								alt={'yPrisma'}
-							/>
-						</Link>
+						<LogoPopover />
 					</div>
 					<div className={'flex w-1/3 items-center justify-end'}>
 						<WalletSelector />

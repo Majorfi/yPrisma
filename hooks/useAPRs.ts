@@ -11,13 +11,13 @@ import {useYDaemonBaseURI} from './useYDaemonBaseURI';
 import type {TAddress} from '@yearn-finance/web-lib/types';
 import type {TYDaemonPrices} from '@yearn-finance/web-lib/utils/schemas/yDaemonPricesSchema';
 
-type TUseAPRProps = {
+export type TUseAPRProps = {
 	stakingContract: TAddress;
 	stakingToken: TAddress;
 	rewardToken: TAddress;
-}[];
+};
 
-export function useAPRs(props: TUseAPRProps): [number[], {value: number; index: number}] {
+export function useAPRs(props: TUseAPRProps[]): [number[], {value: number; index: number}] {
 	const {yDaemonBaseUri} = useYDaemonBaseURI({chainID: 1});
 	const allStakingTokens = props.map((contract): TAddress => contract.stakingToken);
 	const allRewardTokens = props.map((contract): TAddress => contract.rewardToken);
@@ -49,12 +49,6 @@ export function useAPRs(props: TUseAPRProps): [number[], {value: number; index: 
 							abi: STAKING_ABI,
 							chainId: DEFAULT_CHAIN_ID,
 							functionName: 'totalSupply'
-						},
-						{
-							address: item.stakingContract,
-							abi: STAKING_ABI,
-							chainId: DEFAULT_CHAIN_ID,
-							functionName: 'rewardPerToken'
 						}
 					];
 				})
@@ -69,11 +63,12 @@ export function useAPRs(props: TUseAPRProps): [number[], {value: number; index: 
 
 		let rIndex = 0;
 		const APRs = [];
+		const now = Date.now() / 1000;
 		for (const item of props) {
-			const now = Date.now() / 1000;
 			const periodFinish = Number(data?.[rIndex++].result);
 			const rewardRate = toNormalizedBN(toBigInt(data?.[rIndex++].result as bigint), 18);
 			const totalSupply = toNormalizedBN(toBigInt(data?.[rIndex++].result as bigint), 18);
+
 			if (periodFinish < now) {
 				APRs.push(0);
 				continue;
@@ -90,6 +85,7 @@ export function useAPRs(props: TUseAPRProps): [number[], {value: number; index: 
 			const secondsPerYear = 31_556_952;
 			const ratePerYear = perStakingTokenRate * secondsPerYear;
 			const stakingRewardAPR = ((Number(ratePerYear) * Number(rewardPrice)) / Number(tokenPrice)) * 100;
+			console.log({stakingRewardAPR});
 			APRs.push(stakingRewardAPR);
 		}
 

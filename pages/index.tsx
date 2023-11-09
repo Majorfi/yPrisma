@@ -6,34 +6,25 @@ import {ViewClaimAirdrop} from 'components/views/ViewClaimAirdrop';
 import {ViewFarm} from 'components/views/ViewFarm';
 import {ViewMigrationModal} from 'components/views/ViewMigrationModal';
 import {useAPRs} from 'hooks/useAPRs';
-import {
-	AVAILABLE_FARMS,
-	YCRV_ADDRESS,
-	YCRV_STAKING_ADDRESS,
-	YPRISMA_ADDRESS,
-	YPRISMA_REWARD_TOKEN_ADDRESS,
-	YPRISMA_STAKING_ADDRESS
-} from 'utils/constants';
+import {AVAILABLE_FARMS} from 'utils/constants';
 import {cl} from '@yearn-finance/web-lib/utils/cl';
 import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
 
+import type {TUseAPRProps} from 'hooks/useAPRs';
 import type {ReactElement} from 'react';
 
 function Index(): ReactElement {
 	const [selected, set_selected] = useState<number>(0);
 	const pathname = useSearchParams();
-	const [APRS, biggestAPR] = useAPRs([
-		{
-			stakingContract: YPRISMA_STAKING_ADDRESS,
-			stakingToken: YPRISMA_ADDRESS,
-			rewardToken: YPRISMA_REWARD_TOKEN_ADDRESS
-		},
-		{
-			stakingContract: YCRV_STAKING_ADDRESS,
-			stakingToken: YCRV_ADDRESS,
-			rewardToken: YPRISMA_ADDRESS
-		}
-	]);
+	const [APRS, biggestAPR] = useAPRs(
+		AVAILABLE_FARMS.map(
+			(farm): TUseAPRProps => ({
+				stakingContract: farm.stakingContract,
+				stakingToken: farm.stakingToken,
+				rewardToken: farm.rewardToken
+			})
+		)
+	);
 
 	useEffect((): void => {
 		const currentTab = pathname.get('tab');
@@ -88,7 +79,9 @@ function Index(): ReactElement {
 									(farm): ReactElement => (
 										<option
 											key={farm.slug}
-											value={farm.tabIndex}>{`Farm with ${farm.stakingTokenName}`}</option>
+											value={farm.tabIndex}>
+											{`Farm with ${farm.stakingTokenName}`}
+										</option>
 									)
 								)}
 							</select>
@@ -125,7 +118,9 @@ function Index(): ReactElement {
 													: 'bg-neutral-200/0 hover:bg-neutral-200'
 											)}>
 											<p>{`Farm with ${farm.stakingTokenName}`}</p>
-											<p className={'text-sm opacity-60'}>
+											<p
+												suppressHydrationWarning
+												className={'text-sm opacity-60'}>
 												{`${formatAmount(APRS[farm.tabIndex - 1])}% APR`}
 											</p>
 										</button>
