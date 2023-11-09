@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {PRISMA_AIRDROP_DISTRIBUTOR_ABI} from 'utils/abi/distributor.abi';
-import {claimEarlyAirdrop, DEFAULT_CHAIN_ID, EARLY_AIRDROP_ADDRESS} from 'utils/actions';
+import {claimEarlyAirdrop} from 'utils/actions';
+import {DEFAULT_CHAIN_ID, EARLY_AIRDROP_ADDRESS} from 'utils/constants';
 import {type Hex, hexToNumber} from 'viem';
 import {useContractRead} from 'wagmi';
 import {Button} from '@yearn-finance/web-lib/components/Button';
@@ -8,7 +9,7 @@ import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
 import {toBigInt} from '@yearn-finance/web-lib/utils/format.bigNumber';
 import {defaultTxStatus} from '@yearn-finance/web-lib/utils/web3/transaction';
 
-import {Counter} from './AmountCounter';
+import {Counter} from './common/AmountCounter';
 
 import type {ReactElement} from 'react';
 

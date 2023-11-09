@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
-import {YPRISMA_STAKING_ABI} from 'utils/abi/stakingContract.abi';
-import {DEFAULT_CHAIN_ID, PRISMA_ADDRESS, REWARD_TOKEN_ADDRESS, YPRISMA_STAKING_ADDRESS} from 'utils/actions';
+import {STAKING_ABI} from 'utils/abi/stakingContract.abi';
+import {DEFAULT_CHAIN_ID} from 'utils/constants';
 import {yDaemonPricesSchema} from 'utils/yDaemonPricesSchema';
 import {useContractReads} from 'wagmi';
 import {toBigInt, toNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
@@ -8,38 +8,44 @@ import {toBigInt, toNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigN
 import {useFetch} from './useFetch';
 import {useYDaemonBaseURI} from './useYDaemonBaseURI';
 
+import type {TAddress} from '@yearn-finance/web-lib/types';
 import type {TYDaemonPrices} from '@yearn-finance/web-lib/utils/schemas/yDaemonPricesSchema';
 
-export function useAPR(): number {
+type TUseAPRProps = {
+	stakingContract: TAddress;
+	stakingToken: TAddress;
+	rewardToken: TAddress;
+};
+export function useAPR(props: TUseAPRProps): number {
 	const {yDaemonBaseUri} = useYDaemonBaseURI({chainID: 1});
 	const {data: prices} = useFetch<TYDaemonPrices>({
-		endpoint: `${yDaemonBaseUri}/prices/some/${PRISMA_ADDRESS},${REWARD_TOKEN_ADDRESS}?humanized=true`,
+		endpoint: `${yDaemonBaseUri}/prices/some/${props.stakingToken},${props.rewardToken}?humanized=true`,
 		schema: yDaemonPricesSchema
 	});
 
 	const {data} = useContractReads({
 		contracts: [
 			{
-				address: YPRISMA_STAKING_ADDRESS,
-				abi: YPRISMA_STAKING_ABI,
+				address: props.stakingContract,
+				abi: STAKING_ABI,
 				chainId: DEFAULT_CHAIN_ID,
 				functionName: 'periodFinish'
 			},
 			{
-				address: YPRISMA_STAKING_ADDRESS,
-				abi: YPRISMA_STAKING_ABI,
+				address: props.stakingContract,
+				abi: STAKING_ABI,
 				chainId: DEFAULT_CHAIN_ID,
 				functionName: 'rewardRate'
 			},
 			{
-				address: YPRISMA_STAKING_ADDRESS,
-				abi: YPRISMA_STAKING_ABI,
+				address: props.stakingContract,
+				abi: STAKING_ABI,
 				chainId: DEFAULT_CHAIN_ID,
 				functionName: 'totalSupply'
 			},
 			{
-				address: YPRISMA_STAKING_ADDRESS,
-				abi: YPRISMA_STAKING_ABI,
+				address: props.stakingContract,
+				abi: STAKING_ABI,
 				chainId: DEFAULT_CHAIN_ID,
 				functionName: 'rewardPerToken'
 			}
@@ -62,15 +68,15 @@ export function useAPR(): number {
 		}
 
 		const rewardRate = toNormalizedBN(toBigInt(data?.[1].result), 18);
-		const tokenPrice = prices?.[PRISMA_ADDRESS];
-		const rewardPrice = prices?.[REWARD_TOKEN_ADDRESS];
+		const tokenPrice = Number(prices?.[props.stakingToken]);
+		const rewardPrice = Number(prices?.[props.rewardToken]);
 		const perStakingTokenRate = Number(rewardRate.normalized) / Number(totalSupply.normalized);
 		const secondsPerYear = 31_556_952;
 		const ratePerYear = perStakingTokenRate * secondsPerYear;
 		const stakingRewardAPR = ((Number(ratePerYear) * Number(rewardPrice)) / Number(tokenPrice)) * 100;
 
 		return stakingRewardAPR;
-	}, [data, prices]);
+	}, [data, prices, props.rewardToken, props.stakingToken]);
 
 	return calculatedAPR;
 }

@@ -1,19 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import Link from 'next/link';
+import {AmountInput} from 'components/common/AmountInput';
 import {useFetch} from 'hooks/useFetch';
 import {useYDaemonBaseURI} from 'hooks/useYDaemonBaseURI';
-import {YPRISMA_STAKING_ABI} from 'utils/abi/stakingContract.abi';
-import {
-	approveERC20,
-	claimRewards,
-	DEFAULT_CHAIN_ID,
-	PRISMA_ADDRESS,
-	REWARD_TOKEN_ADDRESS,
-	stakeYPrisma,
-	unstakeYPrisma,
-	YPRISMA_ADDRESS,
-	YPRISMA_STAKING_ADDRESS
-} from 'utils/actions';
+import {STAKING_ABI} from 'utils/abi/stakingContract.abi';
+import {approveERC20, claimRewards, stake, unstake} from 'utils/actions';
+import {DEFAULT_CHAIN_ID, PRISMA_ADDRESS, YPRISMA_ADDRESS} from 'utils/constants';
 import {yDaemonPricesSchema} from 'utils/yDaemonPricesSchema';
 import {erc20ABI, useContractRead} from 'wagmi';
 import {Button} from '@yearn-finance/web-lib/components/Button';
@@ -25,13 +17,31 @@ import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
 import {handleInputChangeEventValue} from '@yearn-finance/web-lib/utils/handlers/handleInputChangeEventValue';
 import {defaultTxStatus} from '@yearn-finance/web-lib/utils/web3/transaction';
 
-import {AmountInput} from './common/AmountInput';
-
 import type {ReactElement} from 'react';
+import type {TAddress} from '@yearn-finance/web-lib/types';
 import type {TNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
 import type {TYDaemonPrices} from '@yearn-finance/web-lib/utils/schemas/yDaemonPricesSchema';
 
-function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'claim'}): ReactElement {
+type TFarmFactory = {
+	APR: number;
+	tab: string;
+	stakingContract: TAddress;
+	stakingToken: TAddress;
+	rewardToken: TAddress;
+	stakingTokenName: string;
+	rewardTokenName: string;
+	slug: string;
+};
+export function FarmWithToken({
+	APR,
+	tab,
+	stakingContract,
+	stakingToken,
+	rewardToken,
+	stakingTokenName,
+	rewardTokenName,
+	slug
+}: TFarmFactory): ReactElement {
 	const {provider, address, isActive} = useWeb3();
 	const [txStatusApprove, set_txStatusApprove] = useState(defaultTxStatus);
 	const [txStatusStake, set_txStatusStake] = useState(defaultTxStatus);
@@ -39,13 +49,15 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 	const [txStatusClaim, set_txStatusClaim] = useState(defaultTxStatus);
 	const [amountToUse, set_amountToUse] = useState<TNormalizedBN | undefined>(undefined);
 	const {yDaemonBaseUri} = useYDaemonBaseURI({chainID: 1});
+	const stakingPriceAddr = toAddress(stakingToken) === YPRISMA_ADDRESS ? PRISMA_ADDRESS : stakingToken;
+	const rewardPriceAddr = toAddress(rewardToken) === YPRISMA_ADDRESS ? PRISMA_ADDRESS : rewardToken;
 	const {data: prices} = useFetch<TYDaemonPrices>({
-		endpoint: `${yDaemonBaseUri}/prices/some/${PRISMA_ADDRESS},${REWARD_TOKEN_ADDRESS}?humanized=true`,
+		endpoint: `${yDaemonBaseUri}/prices/some/${stakingPriceAddr},${rewardPriceAddr}?humanized=true`,
 		schema: yDaemonPricesSchema
 	});
 
 	const {data: availableToStake, refetch: refetchAvailable} = useContractRead({
-		address: YPRISMA_ADDRESS,
+		address: stakingToken,
 		abi: erc20ABI,
 		chainId: DEFAULT_CHAIN_ID,
 		functionName: 'balanceOf',
@@ -55,17 +67,17 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 	});
 
 	const {data: approvedAmount, refetch: refetchAllowance} = useContractRead({
-		address: YPRISMA_ADDRESS,
+		address: stakingToken,
 		abi: erc20ABI,
 		chainId: DEFAULT_CHAIN_ID,
 		functionName: 'allowance',
-		args: [toAddress(address), YPRISMA_STAKING_ADDRESS],
+		args: [toAddress(address), stakingContract],
 		select: (data): TNormalizedBN => toNormalizedBN(data)
 	});
 
 	const {data: staked, refetch: refetchStacked} = useContractRead({
-		address: YPRISMA_STAKING_ADDRESS,
-		abi: YPRISMA_STAKING_ABI,
+		address: stakingContract,
+		abi: STAKING_ABI,
 		chainId: DEFAULT_CHAIN_ID,
 		functionName: 'balanceOf',
 		args: [toAddress(address)],
@@ -73,8 +85,8 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 	});
 
 	const {data: earned} = useContractRead({
-		address: YPRISMA_STAKING_ADDRESS,
-		abi: YPRISMA_STAKING_ABI,
+		address: stakingContract,
+		abi: STAKING_ABI,
 		chainId: DEFAULT_CHAIN_ID,
 		watch: true,
 		functionName: 'earned',
@@ -93,25 +105,25 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 	/**********************************************************************************************
 	 * Actions to Approve, Stake, Unstake and Claim
 	 *********************************************************************************************/
-	const onApproveYPrisma = useCallback(async (): Promise<void> => {
+	const approveToken = useCallback(async (): Promise<void> => {
 		const result = await approveERC20({
 			connector: provider,
 			chainID: DEFAULT_CHAIN_ID,
-			contractAddress: YPRISMA_ADDRESS,
-			spenderAddress: YPRISMA_STAKING_ADDRESS,
+			contractAddress: stakingToken,
+			spenderAddress: stakingContract,
 			amount: toBigInt(amountToUse?.raw),
 			statusHandler: set_txStatusApprove
 		});
 		if (result.isSuccessful) {
 			refetchAllowance();
 		}
-	}, [amountToUse?.raw, provider, refetchAllowance]);
+	}, [amountToUse?.raw, provider, refetchAllowance, stakingContract, stakingToken]);
 
-	const onStakeYPrisma = useCallback(async (): Promise<void> => {
-		const result = await stakeYPrisma({
+	const onStake = useCallback(async (): Promise<void> => {
+		const result = await stake({
 			connector: provider,
 			chainID: DEFAULT_CHAIN_ID,
-			contractAddress: YPRISMA_STAKING_ADDRESS,
+			contractAddress: stakingContract,
 			amount: toBigInt(amountToUse?.raw),
 			statusHandler: set_txStatusStake
 		});
@@ -119,32 +131,32 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 			await Promise.all([refetchAvailable(), refetchStacked(), refetchAllowance()]);
 			set_amountToUse(undefined);
 		}
-	}, [amountToUse?.raw, provider, refetchStacked, refetchAllowance, refetchAvailable]);
+	}, [provider, stakingContract, amountToUse?.raw, refetchAvailable, refetchStacked, refetchAllowance]);
 
-	const onUnstakeYPrisma = useCallback(async (): Promise<void> => {
-		const result = await unstakeYPrisma({
+	const onUnstake = useCallback(async (): Promise<void> => {
+		const result = await unstake({
 			connector: provider,
 			chainID: DEFAULT_CHAIN_ID,
-			contractAddress: YPRISMA_STAKING_ADDRESS,
+			contractAddress: stakingContract,
 			statusHandler: set_txStatusUnstake
 		});
 		if (result.isSuccessful) {
 			await Promise.all([refetchAvailable(), refetchStacked(), refetchAllowance()]);
 			set_amountToUse(undefined);
 		}
-	}, [provider, refetchAvailable, refetchStacked, refetchAllowance]);
+	}, [provider, stakingContract, refetchAvailable, refetchStacked, refetchAllowance]);
 
 	const onClaimRewards = useCallback(async (): Promise<void> => {
 		const result = await claimRewards({
 			connector: provider,
 			chainID: DEFAULT_CHAIN_ID,
-			contractAddress: YPRISMA_STAKING_ADDRESS,
+			contractAddress: stakingContract,
 			statusHandler: set_txStatusClaim
 		});
 		if (result.isSuccessful) {
 			refetchAvailable();
 		}
-	}, [provider, refetchAvailable]);
+	}, [provider, refetchAvailable, stakingContract]);
 
 	/**********************************************************************************************
 	 * Some render functions
@@ -156,7 +168,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 					'col-span-1 flex flex-col items-center gap-2 rounded-lg bg-neutral-100 md:col-span-3 md:flex-row md:gap-6'
 				}>
 				<AmountInput
-					label={'Available to stake, yPrisma'}
+					label={`Available to stake, ${stakingTokenName}`}
 					amount={amountToUse}
 					maxAmount={availableToStake}
 					onAmountChange={onChangeInput}
@@ -167,13 +179,17 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 							<p
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
-								{`You have: ${formatAmount(availableToStake?.normalized || 0, 2, 6)} yPrisma`}
+								{`You have: ${formatAmount(
+									availableToStake?.normalized || 0,
+									2,
+									6
+								)} ${stakingTokenName}`}
 							</p>
 							<p
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(amountToUse?.normalized || 0) * Number(prices?.[PRISMA_ADDRESS] || 0)
+									Number(amountToUse?.normalized || 0) * Number(prices?.[stakingPriceAddr] || 0)
 								)}`}
 							</p>
 						</div>
@@ -181,7 +197,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 				/>
 				<div className={'-mx-2'}>
 					<Link
-						href={'/?tab=unstake'}
+						href={`/?tab=unstake-${slug}`}
 						scroll={false}
 						replace
 						shallow>
@@ -196,7 +212,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 					</Link>
 				</div>
 				<AmountInput
-					label={'Staked amount'}
+					label={'Future staked amount'}
 					disabled
 					amount={amountToUse}
 					legend={
@@ -205,7 +221,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(amountToUse?.normalized || 0) * Number(prices?.[PRISMA_ADDRESS] || 0)
+									Number(amountToUse?.normalized || 0) * Number(prices?.[stakingPriceAddr] || 0)
 								)}`}
 							</p>
 						</div>
@@ -223,7 +239,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 								toBigInt(amountToUse?.raw) > toBigInt(availableToStake?.raw) ||
 								toBigInt(approvedAmount?.raw) >= toBigInt(amountToUse?.raw)
 							}
-							onClick={onApproveYPrisma}>
+							onClick={approveToken}>
 							{'Approve'}
 						</Button>
 						<Button
@@ -235,7 +251,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 								toBigInt(amountToUse?.raw) === 0n ||
 								toBigInt(approvedAmount?.raw) < toBigInt(amountToUse?.raw)
 							}
-							onClick={onStakeYPrisma}>
+							onClick={onStake}>
 							{'Stake'}
 						</Button>
 					</div>
@@ -251,7 +267,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 					'col-span-3 flex flex-col items-center gap-0 rounded-lg bg-neutral-100 md:flex-row md:gap-6'
 				}>
 				<AmountInput
-					label={'Rewards, wstETH'}
+					label={`Rewards, ${rewardTokenName}`}
 					disabled
 					amount={earned}
 					legend={
@@ -260,7 +276,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(earned?.normalized || 0) * Number(prices?.[REWARD_TOKEN_ADDRESS] || 0)
+									Number(earned?.normalized || 0) * Number(prices?.[rewardPriceAddr] || 0)
 								)}`}
 							</p>
 						</div>
@@ -297,7 +313,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(staked?.normalized || 0) * Number(prices?.[PRISMA_ADDRESS] || 0)
+									Number(staked?.normalized || 0) * Number(prices?.[stakingPriceAddr] || 0)
 								)}`}
 							</p>
 						</div>
@@ -305,7 +321,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 				/>
 				<div className={'-mx-2'}>
 					<Link
-						href={'/?tab=stake'}
+						href={`/?tab=stake-${slug}`}
 						scroll={false}
 						replace
 						shallow>
@@ -320,7 +336,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 					</Link>
 				</div>
 				<AmountInput
-					label={'Amount to unstake, yPrisma'}
+					label={`Amount to unstake, ${stakingTokenName}`}
 					disabled
 					amount={staked}
 					legend={
@@ -329,7 +345,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(staked?.normalized || 0) * Number(prices?.[PRISMA_ADDRESS] || 0)
+									Number(staked?.normalized || 0) * Number(prices?.[stakingPriceAddr] || 0)
 								)}`}
 							</p>
 						</div>
@@ -342,7 +358,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 							isBusy={txStatusUnstake.pending}
 							className={'w-full md:w-[316px]'}
 							isDisabled={!isActive || !amountToUse || toBigInt(staked?.raw) === 0n}
-							onClick={onUnstakeYPrisma}>
+							onClick={onUnstake}>
 							{'Unstake + Claim'}
 						</Button>
 					</div>
@@ -355,8 +371,8 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 		<>
 			<div className={'col-span-1 w-full items-center rounded-lg bg-neutral-100 md:col-span-3'}>
 				<div className={'mb-20 md:mb-10'}>
-					{tab === 'stake' && renderStakeView()}
-					{tab === 'unstake' && renderUnstakeView()}
+					{tab === `stake-${slug}` && renderStakeView()}
+					{tab === `unstake-${slug}` && renderUnstakeView()}
 				</div>
 
 				<div>{renderClaimView()}</div>
@@ -387,7 +403,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 						<dt className={'text-xs text-neutral-900/60 md:text-base'}>{'Available to stake'}</dt>
 						<dd className={'font-number text-sm font-bold md:text-base'}>
 							{formatAmount(availableToStake?.normalized || 0, 6, 6)}
-							<span className={'font-normal text-neutral-900/60'}>{' yPrisma'}</span>
+							<span className={'font-normal text-neutral-900/60'}>{` ${stakingTokenName}`}</span>
 						</dd>
 					</div>
 
@@ -395,7 +411,7 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 						<dt className={'text-xs text-neutral-900/60 md:text-base'}>{'Already staked'}</dt>
 						<dd className={'font-number text-sm font-bold md:text-base'}>
 							{formatAmount(staked?.normalized || 0, 6, 6)}
-							<span className={'font-normal text-neutral-900/60'}>{' yPrisma'}</span>
+							<span className={'font-normal text-neutral-900/60'}>{` ${stakingTokenName}`}</span>
 						</dd>
 					</div>
 
@@ -404,12 +420,11 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 						<dd>
 							<b className={'font-number block text-sm md:text-base'}>
 								{formatAmount(earned?.normalized || 0, 6, 6)}
-								&nbsp;
-								<span className={'font-normal text-neutral-900/60'}>{' wstETH'}</span>
+								<span className={'font-normal text-neutral-900/60'}>{` ${rewardTokenName}`}</span>
 							</b>
 							<small className={'font-number block text-right text-xs text-neutral-900/60'}>
 								{`$ ${formatAmount(
-									Number(earned?.normalized) * Number(prices?.[REWARD_TOKEN_ADDRESS]) || 0,
+									Number(earned?.normalized) * Number(prices?.[rewardPriceAddr]) || 0,
 									2,
 									2
 								)}`}
@@ -421,5 +436,3 @@ function StakeYPrisma({APR, tab}: {APR: number; tab: 'stake' | 'unstake' | 'clai
 		</>
 	);
 }
-
-export {StakeYPrisma};

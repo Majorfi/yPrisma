@@ -1,11 +1,6 @@
 import {Fragment, useCallback, useState} from 'react';
-import {
-	approveERC20,
-	DEFAULT_CHAIN_ID,
-	LEGACY_MINTER_ADDRESS,
-	migrateOGYPrisma,
-	YPRISMA_LEGACY_ADDRESS
-} from 'utils/actions';
+import {approveERC20, migrateOGYPrisma} from 'utils/actions';
+import {DEFAULT_CHAIN_ID, LEGACY_MINTER_ADDRESS, YPRISMA_LEGACY_ADDRESS} from 'utils/constants';
 import {erc20ABI, useContractRead} from 'wagmi';
 import {Dialog, Transition} from '@headlessui/react';
 import {Button} from '@yearn-finance/web-lib/components/Button';

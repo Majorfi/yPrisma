@@ -1,12 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
+import {AVAILABLE_FARMS} from 'utils/constants';
 import {Button} from '@yearn-finance/web-lib/components/Button';
 
 import {PercentCounter} from './AmountCounter';
 
 import type {ReactElement} from 'react';
 
-function StakeBanner(props: {APR: number}): ReactElement {
+function StakeBanner(props: {APR: {value: number; index: number}}): ReactElement {
 	return (
 		<div
 			className={'rounded-xl p-1'}
@@ -26,12 +27,12 @@ function StakeBanner(props: {APR: number}): ReactElement {
 						<b
 							suppressHydrationWarning
 							className={'font-number w-full text-center text-3xl text-neutral-900'}>
-							<PercentCounter value={props.APR} />
+							<PercentCounter value={props.APR.value} />
 							{` APR`}
 						</b>
 						<Link
 							className={'mt-2 w-full md:mt-0 md:w-fit'}
-							href={'/?tab=stake'}
+							href={`/?tab=stake-${AVAILABLE_FARMS[props.APR.index].slug}`}
 							scroll={false}
 							replace
 							shallow>

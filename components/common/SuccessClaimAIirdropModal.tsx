@@ -81,7 +81,7 @@ function SuccessModal({isOpen, set_isOpen}: {isOpen: boolean; set_isOpen: (isOpe
 								</div>
 								<div className={'mt-10 flex items-center justify-center text-center'}>
 									<Link
-										href={'/?tab=stake'}
+										href={'/?tab=stake-yprisma'}
 										passHref>
 										<Button>{'Stake it for a fancy APR!'}</Button>
 									</Link>

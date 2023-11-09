@@ -1,4 +1,4 @@
-export const YPRISMA_STAKING_ABI = [
+export const STAKING_ABI = [
 	{
 		inputs: [
 			{internalType: 'address', name: '_owner', type: 'address'},
