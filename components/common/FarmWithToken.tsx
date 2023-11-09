@@ -12,6 +12,7 @@ import {Button} from '@yearn-finance/web-lib/components/Button';
 import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
 import {toAddress} from '@yearn-finance/web-lib/utils/address';
 import {cl} from '@yearn-finance/web-lib/utils/cl';
+import {MAX_UINT_256} from '@yearn-finance/web-lib/utils/constants';
 import {toBigInt, toNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
 import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
 import {handleInputChangeEventValue} from '@yearn-finance/web-lib/utils/handlers/handleInputChangeEventValue';
@@ -111,13 +112,13 @@ export function FarmWithToken({
 			chainID: DEFAULT_CHAIN_ID,
 			contractAddress: stakingToken,
 			spenderAddress: stakingContract,
-			amount: toBigInt(amountToUse?.raw),
+			amount: MAX_UINT_256,
 			statusHandler: set_txStatusApprove
 		});
 		if (result.isSuccessful) {
 			refetchAllowance();
 		}
-	}, [amountToUse?.raw, provider, refetchAllowance, stakingContract, stakingToken]);
+	}, [provider, refetchAllowance, stakingContract, stakingToken]);
 
 	const onStake = useCallback(async (): Promise<void> => {
 		const result = await stake({
@@ -400,27 +401,30 @@ export function FarmWithToken({
 					</div>
 
 					<div className={'flex w-full items-baseline justify-between'}>
-						<dt className={'text-xs text-neutral-900/60 md:text-base'}>{'Available to stake'}</dt>
+						<dt className={'text-xs text-neutral-900/60 md:text-base'}>
+							{`Available to stake, ${stakingTokenName}`}
+						</dt>
 						<dd className={'font-number text-sm font-bold md:text-base'}>
 							{formatAmount(availableToStake?.normalized || 0, 6, 6)}
-							<span className={'font-normal text-neutral-900/60'}>{` ${stakingTokenName}`}</span>
 						</dd>
 					</div>
 
 					<div className={'flex w-full items-baseline justify-between'}>
-						<dt className={'text-xs text-neutral-900/60 md:text-base'}>{'Already staked'}</dt>
+						<dt className={'text-xs text-neutral-900/60 md:text-base'}>
+							{`Already staked, ${stakingTokenName}`}
+						</dt>
 						<dd className={'font-number text-sm font-bold md:text-base'}>
 							{formatAmount(staked?.normalized || 0, 6, 6)}
-							<span className={'font-normal text-neutral-900/60'}>{` ${stakingTokenName}`}</span>
 						</dd>
 					</div>
 
 					<div className={'flex w-full items-baseline justify-between'}>
-						<dt className={'text-xs text-neutral-900/60 md:text-base'}>{'Amount earned'}</dt>
+						<dt className={'text-xs text-neutral-900/60 md:text-base'}>
+							{`Amount earned, ${rewardTokenName}`}
+						</dt>
 						<dd>
 							<b className={'font-number block text-sm md:text-base'}>
 								{formatAmount(earned?.normalized || 0, 6, 6)}
-								<span className={'font-normal text-neutral-900/60'}>{` ${rewardTokenName}`}</span>
 							</b>
 							<small className={'font-number block text-right text-xs text-neutral-900/60'}>
 								{`$ ${formatAmount(

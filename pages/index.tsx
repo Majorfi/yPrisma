@@ -15,6 +15,7 @@ import {
 	YPRISMA_STAKING_ADDRESS
 } from 'utils/constants';
 import {cl} from '@yearn-finance/web-lib/utils/cl';
+import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
 
 import type {ReactElement} from 'react';
 
@@ -77,7 +78,22 @@ function Index(): ReactElement {
 						className={
 							'mb-3 flex flex-row justify-between gap-6 border-b border-neutral-200/60 p-4 px-6 md:px-10'
 						}>
-						<div className={'flex flex-row gap-6'}>
+						<div className={'flex w-full flex-row gap-6 md:hidden'}>
+							<select
+								value={selected}
+								onChange={(e): void => set_selected(Number(e.target.value))}
+								className={'w-full border-none bg-transparent'}>
+								<option value={0}>{'Claim Airdrop'}</option>
+								{AVAILABLE_FARMS.map(
+									(farm): ReactElement => (
+										<option
+											key={farm.slug}
+											value={farm.tabIndex}>{`Farm with ${farm.stakingTokenName}`}</option>
+									)
+								)}
+							</select>
+						</div>
+						<div className={'hidden flex-row gap-6 md:flex'}>
 							<Link
 								href={'/'}
 								scroll={false}
@@ -86,40 +102,36 @@ function Index(): ReactElement {
 								<button
 									onClick={(): void => set_selected(0)}
 									className={cl(
-										'w-36 rounded-lg p-2 text-center transition-colors cursor-pointer',
+										'w-36 rounded-lg p-2 text-center transition-colors cursor-pointer h-full',
 										selected === 0 ? 'bg-neutral-200' : 'bg-neutral-200/0 hover:bg-neutral-200'
 									)}>
 									<p>{'Claim Airdrop'}</p>
 								</button>
 							</Link>
-							<Link
-								href={'/?tab=stake-yprisma'}
-								scroll={false}
-								replace
-								shallow>
-								<button
-									onClick={(): void => set_selected(1)}
-									className={cl(
-										'px-4 rounded-lg text-center transition-colors cursor-pointer p-2',
-										selected === 1 ? 'bg-neutral-200' : 'bg-neutral-200/0 hover:bg-neutral-200'
-									)}>
-									<p>{'Farm with yPRISMA'}</p>
-								</button>
-							</Link>
-							<Link
-								href={'/?tab=stake-ycrv'}
-								scroll={false}
-								replace
-								shallow>
-								<button
-									onClick={(): void => set_selected(2)}
-									className={cl(
-										'px-4 rounded-lg text-center transition-colors cursor-pointer p-2',
-										selected === 2 ? 'bg-neutral-200' : 'bg-neutral-200/0 hover:bg-neutral-200'
-									)}>
-									<p>{'Farm with yCRV'}</p>
-								</button>
-							</Link>
+							{AVAILABLE_FARMS.map(
+								(farm): ReactElement => (
+									<Link
+										key={farm.slug}
+										href={`/?tab=stake-${farm.slug}`}
+										scroll={false}
+										replace
+										shallow>
+										<button
+											onClick={(): void => set_selected(1)}
+											className={cl(
+												'px-4 rounded-lg text-center transition-colors cursor-pointer p-2 w-max',
+												selected === farm.tabIndex
+													? 'bg-neutral-200'
+													: 'bg-neutral-200/0 hover:bg-neutral-200'
+											)}>
+											<p>{`Farm with ${farm.stakingTokenName}`}</p>
+											<p className={'text-sm opacity-60'}>
+												{`${formatAmount(APRS[farm.tabIndex - 1])}% APR`}
+											</p>
+										</button>
+									</Link>
+								)
+							)}
 						</div>
 						<ViewMigrationModal />
 					</nav>

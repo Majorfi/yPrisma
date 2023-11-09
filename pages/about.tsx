@@ -6,7 +6,7 @@ import {
 	YPRISMA_ADDRESS,
 	YPRISMA_LEGACY_ADDRESS,
 	YPRISMA_STAKING_ADDRESS
-} from 'utils/actions';
+} from 'utils/constants';
 import {toAddress} from '@yearn-finance/web-lib/utils/address';
 import {getNetwork} from '@yearn-finance/web-lib/utils/wagmi/utils';
 

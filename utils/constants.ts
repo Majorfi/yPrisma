@@ -2,7 +2,7 @@ import {toAddress} from '@yearn-finance/web-lib/utils/address';
 
 import type {TAddress} from '@yearn-finance/web-lib/types';
 
-export const DEFAULT_CHAIN_ID = 1337;
+export const DEFAULT_CHAIN_ID = 1;
 export const YEARN_VOTER_ADDRESS = toAddress('0x90be6DFEa8C80c184C442a36e17cB2439AAE25a7');
 export const VECRV_AIRDROP_ADDRESS = toAddress('0x3ea03249B4D68Be92a8eda027C5ac12e6E419BEE');
 export const EARLY_AIRDROP_ADDRESS = toAddress('0x2C533357664d8750e5F851f39B2534147F5578af');
