@@ -2,7 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import {
 	DEFAULT_CHAIN_ID,
+	LP_YPRISMA_STAKING_ADDRESS,
 	PRISMA_ADDRESS,
+	YCRV_STAKING_ADDRESS,
 	YPRISMA_ADDRESS,
 	YPRISMA_LEGACY_ADDRESS,
 	YPRISMA_STAKING_ADDRESS
@@ -13,6 +15,7 @@ import {getNetwork} from '@yearn-finance/web-lib/utils/wagmi/utils';
 import type {ReactElement} from 'react';
 
 function Index(): ReactElement {
+	const blockExplorer = getNetwork(DEFAULT_CHAIN_ID).blockExplorers?.etherscan?.url;
 	return (
 		<div>
 			<div className={'relative mx-auto mb-0 flex w-full flex-col bg-neutral-0 pt-14 md:pt-20'}>
@@ -67,17 +70,16 @@ function Index(): ReactElement {
 								<dt className={'text-neutral-900/60'}>{'Prisma Token'}</dt>
 								<Link
 									className={'cursor-alias hover:underline'}
-									href={`${getNetwork(DEFAULT_CHAIN_ID).blockExplorers?.etherscan
-										?.url}/address/${PRISMA_ADDRESS}`}>
+									href={`${blockExplorer}/address/${PRISMA_ADDRESS}`}>
 									<dd className={'font-number'}>{toAddress(PRISMA_ADDRESS)}</dd>
 								</Link>
 							</div>
+
 							<div className={'flex w-full items-baseline justify-between'}>
 								<dt className={'text-neutral-900/60'}>{'yPrisma Token'}</dt>
 								<Link
 									className={'cursor-alias hover:underline'}
-									href={`${getNetwork(DEFAULT_CHAIN_ID).blockExplorers?.etherscan
-										?.url}/address/${YPRISMA_ADDRESS}`}>
+									href={`${blockExplorer}/address/${YPRISMA_ADDRESS}`}>
 									<dd className={'font-number'}>{toAddress(YPRISMA_ADDRESS)}</dd>
 								</Link>
 							</div>
@@ -85,8 +87,7 @@ function Index(): ReactElement {
 								<dt className={'text-neutral-900/60'}>{'Legacy yPrisma Token'}</dt>
 								<Link
 									className={'cursor-alias hover:underline'}
-									href={`${getNetwork(DEFAULT_CHAIN_ID).blockExplorers?.etherscan
-										?.url}/address/${YPRISMA_LEGACY_ADDRESS}`}>
+									href={`${blockExplorer}/address/${YPRISMA_LEGACY_ADDRESS}`}>
 									<dd className={'font-number'}>{toAddress(YPRISMA_LEGACY_ADDRESS)}</dd>
 								</Link>
 							</div>
@@ -94,18 +95,17 @@ function Index(): ReactElement {
 								<dt className={'text-neutral-900/60'}>{'yPrisma Staking Contract'}</dt>
 								<Link
 									className={'cursor-alias hover:underline'}
-									href={`${getNetwork(DEFAULT_CHAIN_ID).blockExplorers?.etherscan
-										?.url}/address/${YPRISMA_STAKING_ADDRESS}`}>
+									href={`${blockExplorer}/address/${YPRISMA_STAKING_ADDRESS}`}>
 									<dd className={'font-number'}>{toAddress(YPRISMA_STAKING_ADDRESS)}</dd>
 								</Link>
 							</div>
 							<div className={'flex w-full items-baseline justify-between'}>
 								<dt className={'text-neutral-900/60'}>{'yCRV Staking Contract'}</dt>
-								<dd className={'font-number'}>{'TBD'}</dd>
+								<dd className={'font-number'}>{toAddress(YCRV_STAKING_ADDRESS)}</dd>
 							</div>
 							<div className={'flex w-full items-baseline justify-between'}>
 								<dt className={'text-neutral-900/60'}>{'yPrismaLP Staking Contract'}</dt>
-								<dd className={'font-number'}>{'TBD'}</dd>
+								<dd className={'font-number'}>{toAddress(LP_YPRISMA_STAKING_ADDRESS)}</dd>
 							</div>
 						</dl>
 					</div>
