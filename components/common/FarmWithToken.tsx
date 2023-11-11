@@ -358,7 +358,7 @@ export function FarmWithToken({
 							key={'unstake button'}
 							isBusy={txStatusUnstake.pending}
 							className={'w-full md:w-[316px]'}
-							isDisabled={!isActive || !amountToUse || toBigInt(staked?.raw) === 0n}
+							isDisabled={!isActive || toBigInt(staked?.raw) === 0n}
 							onClick={onUnstake}>
 							{'Unstake + Claim'}
 						</Button>
