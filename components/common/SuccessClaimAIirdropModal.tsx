@@ -1,10 +1,10 @@
 import {Fragment, useState} from 'react';
 import Confetti from 'react-dom-confetti';
-import Link from 'next/link';
 import {Dialog, Transition} from '@headlessui/react';
 import {useUpdateEffect} from '@react-hookz/web';
-import {Button} from '@yearn-finance/web-lib/components/Button';
 import {cl} from '@yearn-finance/web-lib/utils/cl';
+
+import {StakeBanner} from './StakeBanner';
 
 import type {ReactElement} from 'react';
 
@@ -45,19 +45,19 @@ function SuccessModal({isOpen, set_isOpen}: {isOpen: boolean; set_isOpen: (isOpe
 					/>
 				</div>
 				<div className={'fixed inset-0 z-[1001] w-screen overflow-y-auto'}>
-					<div className={'flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0'}>
+					<div className={'flex min-h-full items-end justify-center p-4 text-center md:items-center md:p-0'}>
 						<Transition.Child
 							as={Fragment}
 							enter={'ease-out duration-300'}
-							enterFrom={'opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'}
-							enterTo={'opacity-100 translate-y-0 sm:scale-100'}
+							enterFrom={'opacity-0 translate-y-4 md:translate-y-0 md:scale-95'}
+							enterTo={'opacity-100 translate-y-0 md:scale-100'}
 							leave={'ease-in duration-200'}
-							leaveFrom={'opacity-100 translate-y-0 sm:scale-100'}
-							leaveTo={'opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'}>
+							leaveFrom={'opacity-100 translate-y-0 md:scale-100'}
+							leaveTo={'opacity-0 translate-y-4 md:translate-y-0 md:scale-95'}>
 							<Dialog.Panel
 								className={cl(
 									'relative overflow-hidden rounded-3xl !bg-neutral-200 !p-10 transition-all',
-									'sm:my-8 sm:w-full sm:max-w-lg sm:p-6'
+									'md:my-8 md:w-full md:max-w-2xl md:p-6'
 								)}>
 								<div>
 									<div className={'text-center'}>
@@ -79,12 +79,9 @@ function SuccessModal({isOpen, set_isOpen}: {isOpen: boolean; set_isOpen: (isOpe
 										</div>
 									</div>
 								</div>
-								<div className={'mt-10 flex items-center justify-center text-center'}>
-									<Link
-										href={'/?tab=stake-yprisma'}
-										passHref>
-										<Button>{'Stake it for a fancy APR!'}</Button>
-									</Link>
+
+								<div className={'pt-10 text-left'}>
+									<StakeBanner APR={{value: 342, index: 0}} />
 								</div>
 							</Dialog.Panel>
 						</Transition.Child>

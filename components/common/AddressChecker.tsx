@@ -38,22 +38,22 @@ function AddressChecker(props: {
 			</div>
 
 			<div className={'flex flex-row space-x-4 pt-4 md:pt-0'}>
-				<div className={'w-full md:w-max'}>
+				<div className={'w-1/2 md:w-max'}>
 					<small className={'hidden pb-1 text-neutral-900/60 md:block'}>&nbsp;</small>
 					<Button
 						onClick={props.onCheckEligibility}
-						className={'w-full min-w-[150px] whitespace-nowrap'}>
+						className={'w-full whitespace-nowrap md:min-w-[150px]'}>
 						{'Check Eligibility'}
 					</Button>
 				</div>
-				<div className={'w-full md:w-max'}>
+				<div className={'w-1/2 md:w-max'}>
 					<small className={'hidden pb-1 text-neutral-900/60 md:block'}>&nbsp;</small>
 					<Link
 						href={'https://github.com/prisma-fi/airdrop-proofs/tree/main/proofs'}
 						target={'_blank'}>
 						<Button
 							variant={'outlined'}
-							className={'w-full min-w-[150px] cursor-alias whitespace-nowrap'}>
+							className={'w-full cursor-alias whitespace-nowrap md:min-w-[150px]'}>
 							{'Check Proofs'}
 							<svg
 								className={'ml-2 h-4 w-4'}

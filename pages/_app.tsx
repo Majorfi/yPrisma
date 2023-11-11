@@ -1,6 +1,7 @@
 import React from 'react';
 import localFont from 'next/font/local';
 import AppWrapper from 'components/common/AppWrapper';
+import {YLockersContextApp} from 'contexts/useLockers';
 import {mainnet, optimism} from 'wagmi/chains';
 import {Analytics} from '@vercel/analytics/react';
 import {WithYearn} from '@yearn-finance/web-lib/contexts/WithYearn';
@@ -52,9 +53,11 @@ function MyApp(props: AppProps): ReactElement {
 					},
 					ui: {shouldUseThemes: false}
 				}}>
-				<main className={cl('flex flex-col h-screen', aeonik.className)}>
-					<AppWrapper {...props} />
-				</main>
+				<YLockersContextApp>
+					<main className={cl('flex flex-col h-screen', aeonik.className)}>
+						<AppWrapper {...props} />
+					</main>
+				</YLockersContextApp>
 			</WithYearn>
 			<Analytics />
 		</>

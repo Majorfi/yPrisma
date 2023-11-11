@@ -22,50 +22,61 @@ export function AboutHeading(): ReactElement {
 	);
 }
 
+export function AboutYPrisma(): ReactElement {
+	return (
+		<div>
+			<h3 className={'text-xl font-bold'}>{'Why would I claim my PRISMA as yPRISMA?'}</h3>
+			<div className={'mt-2 flex flex-col space-y-2 text-neutral-900/80'}>
+				<p>
+					{
+						'Good question anon. The Prisma airdrop comes as a locked position that cannot be transferred until the lock (of up to 1 year) expires.'
+					}
+				</p>
+				<p>
+					{
+						"By claiming your airdrop using this page, you'll lock your full Prisma airdrop to Yearn in exchange for yPrisma which is (and will always be) transferrable and liquid."
+					}
+				</p>
+				<p>{'yPrisma holders also receieve their share of Prisma protocol rewards. Noice.'}</p>
+			</div>
+		</div>
+	);
+}
+
+export function AboutAirdrop(): ReactElement {
+	return (
+		<div className={'mt-10'}>
+			<h3 className={'text-xl font-bold'}>{'Airdrops? Wut??'}</h3>
+			<div className={'mt-2 text-neutral-900/80'}>
+				<p>
+					{
+						"Check if you're eligible for either of the two Prisma airdrops below, and if you're eligible you can lock your airdrop to Yearn and instantly receive yPrisma at a 1:1 rate."
+					}
+				</p>
+				<p className={'mt-2'}>
+					{
+						'Converting Prisma to yPrisma is a one way transaction. Exchanging yPrisma back to Prisma can be done on secondary markets. Learn more on '
+					}
+					<Link
+						className={'underline'}
+						target={'_blank'}
+						href={
+							'https://docs.prismafinance.com/governance/prisma-locking-and-lock-weight#withdrawing-early-from-locked-positions'
+						}>
+						{"Prisma's docs."}
+					</Link>
+				</p>
+			</div>
+		</div>
+	);
+}
+
 export function AboutCopy({APR}: {APR: {value: number; index: number}}): ReactElement {
 	return (
 		<>
 			<div className={'mb-8 border-neutral-200 py-2 text-neutral-700 md:border-l-4 md:pl-6'}>
-				<div>
-					<h3 className={'text-xl font-bold'}>{'Why would I claim my PRISMA as yPRISMA?'}</h3>
-					<div className={'mt-2 flex flex-col space-y-2 text-neutral-900/80'}>
-						<p>
-							{
-								'Good question anon. The Prisma airdrop comes as a locked position that cannot be transferred until the lock (of up to 1 year) expires.'
-							}
-						</p>
-						<p>
-							{
-								"By claiming your airdrop using this page, you'll lock your full Prisma airdrop to Yearn in exchange for yPrisma which is (and will always be) transferrable and liquid."
-							}
-						</p>
-						<p>{'yPrisma holders also receieve their share of Prisma protocol rewards. Noice.'}</p>
-					</div>
-				</div>
-
-				<div className={'mt-10'}>
-					<h3 className={'text-xl font-bold'}>{'Airdrops? Wut??'}</h3>
-					<div className={'mt-2 text-neutral-900/80'}>
-						<p>
-							{
-								"Check if you're eligible for either of the two Prisma airdrops below, and if you're eligible you can lock your airdrop to Yearn and instantly receive yPrisma at a 1:1 rate."
-							}
-						</p>
-						<p className={'mt-2'}>
-							{
-								'Converting Prisma to yPrisma is a one way transaction. Exchanging yPrisma back to Prisma can be done on secondary markets. Learn more on '
-							}
-							<Link
-								className={'underline'}
-								target={'_blank'}
-								href={
-									'https://docs.prismafinance.com/governance/prisma-locking-and-lock-weight#withdrawing-early-from-locked-positions'
-								}>
-								{"Prisma's docs."}
-							</Link>
-						</p>
-					</div>
-				</div>
+				<AboutYPrisma />
+				<AboutAirdrop />
 			</div>
 			<div className={'mb-4 hidden md:block'}>
 				<StakeBanner APR={APR} />

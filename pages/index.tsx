@@ -1,30 +1,23 @@
 import React, {useEffect, useState} from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import {useSearchParams} from 'next/navigation';
-import {About, AboutCopy} from 'components/views/ViewAbout';
+import {StakeBanner} from 'components/common/StakeBanner';
+import {AboutAirdrop, AboutCopy, AboutHeading, AboutYPrisma} from 'components/views/ViewAbout';
 import {ViewClaimAirdrop} from 'components/views/ViewClaimAirdrop';
 import {ViewFarm} from 'components/views/ViewFarm';
 import {ViewMigrationModal} from 'components/views/ViewMigrationModal';
-import {useAPRs} from 'hooks/useAPRs';
+import {useYLockers} from 'contexts/useLockers';
 import {AVAILABLE_FARMS} from 'utils/constants';
 import {cl} from '@yearn-finance/web-lib/utils/cl';
 import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
 
-import type {TUseAPRProps} from 'hooks/useAPRs';
 import type {ReactElement} from 'react';
 
 function Index(): ReactElement {
 	const [selected, set_selected] = useState<number>(0);
 	const pathname = useSearchParams();
-	const [APRS, biggestAPR] = useAPRs(
-		AVAILABLE_FARMS.map(
-			(farm): TUseAPRProps => ({
-				stakingContract: farm.stakingContract,
-				stakingToken: farm.stakingToken,
-				rewardToken: farm.rewardToken
-			})
-		)
-	);
+	const {APRs, biggestAPR} = useYLockers();
 
 	useEffect((): void => {
 		const currentTab = pathname.get('tab');
@@ -48,7 +41,7 @@ function Index(): ReactElement {
 		return (
 			<ViewFarm
 				key={farmArgs.slug}
-				APR={APRS[farmIndex]}
+				APR={APRs[farmIndex]}
 				currentTab={
 					pathname.get('tab') === `unstake-${farmArgs.slug}`
 						? `unstake-${farmArgs.slug}`
@@ -62,7 +55,39 @@ function Index(): ReactElement {
 	return (
 		<div className={'relative mx-auto mb-0 flex w-full flex-col bg-neutral-0 pt-14 md:pt-20'}>
 			<div className={'relative mx-auto mt-6 w-screen max-w-6xl pb-40 '}>
-				<About APR={biggestAPR} />
+				<header className={'grid grid-cols-1 gap-0 pb-6 md:hidden'}>
+					<AboutHeading />
+					<div className={'mt-6'}>
+						<StakeBanner APR={biggestAPR} />
+					</div>
+				</header>
+				<header className={'hidden grid-cols-12 gap-0 md:grid md:pt-12'}>
+					<div className={'col-span-12 md:col-span-8 md:mb-0 md:pr-20'}>
+						<div className={'mb-10 flex flex-col justify-center'}>
+							<AboutHeading />
+						</div>
+						<div className={'mb-8 border-neutral-200 py-2 text-neutral-700 md:border-l-4 md:pl-6'}>
+							<AboutYPrisma />
+							<AboutAirdrop />
+						</div>
+						<div className={'mb-4 hidden md:block'}>
+							<StakeBanner APR={biggestAPR} />
+						</div>
+					</div>
+
+					<div
+						className={
+							'relative col-span-12 mb-16 hidden items-center justify-center md:col-span-4 md:flex'
+						}>
+						<Image
+							priority
+							alt={''}
+							src={'./prisma.svg'}
+							width={400}
+							height={400}
+						/>
+					</div>
+				</header>
 
 				<div className={'mt-4 rounded-xl bg-neutral-100'}>
 					<nav
@@ -121,7 +146,7 @@ function Index(): ReactElement {
 											<p
 												suppressHydrationWarning
 												className={'text-sm opacity-60'}>
-												{`${formatAmount(APRS[farm.tabIndex - 1])}% APR`}
+												{`${formatAmount(APRs[farm.tabIndex - 1])}% APR`}
 											</p>
 										</button>
 									</Link>
