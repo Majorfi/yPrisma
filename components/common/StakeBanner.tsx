@@ -7,7 +7,7 @@ import {PercentCounter} from './AmountCounter';
 
 import type {ReactElement} from 'react';
 
-function StakeBanner(props: {APR: {value: number; index: number}}): ReactElement {
+export function StakeBanner(props: {APR: {value: number; index: number}}): ReactElement {
 	return (
 		<div
 			className={'rounded-xl p-1'}
@@ -45,4 +45,40 @@ function StakeBanner(props: {APR: {value: number; index: number}}): ReactElement
 	);
 }
 
-export {StakeBanner};
+export function SmallStakeBanner(props: {APR: {value: number; index: number}}): ReactElement {
+	return (
+		<div
+			className={'rounded-xl p-1'}
+			style={{
+				backgroundImage:
+					'-webkit-linear-gradient(0deg, rgba(200,25,40,1) 0%, rgba(219,110,55,1) 20%, rgba(236,184,64,1) 40%, rgba(104,183,120,1) 60%, rgba(71,119,211,1) 80%, rgba(72,44,216,1) 100%)'
+			}}>
+			<div className={'flex h-full flex-col rounded-xl bg-neutral-100 p-4'}>
+				<div className={'flex w-full flex-col justify-between gap-4'}>
+					<div>
+						<p className={'whitespace-break-spaces text-lg font-bold text-neutral-900'}>
+							{'Every rainbow needs a pot of gold.'}
+						</p>
+					</div>
+
+					<div className={'flex w-full flex-row items-center justify-between'}>
+						<b
+							suppressHydrationWarning
+							className={'font-number w-full text-xl text-neutral-900'}>
+							<PercentCounter value={props.APR.value} />
+							{` APR`}
+						</b>
+						<Link
+							className={'w-full md:w-fit'}
+							href={`/?tab=stake-${AVAILABLE_FARMS[props.APR.index].slug}`}
+							scroll={false}
+							replace
+							shallow>
+							<Button className={'h-8 w-full whitespace-nowrap'}>{'Stake now'}</Button>
+						</Link>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}

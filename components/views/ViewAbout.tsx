@@ -71,6 +71,21 @@ export function AboutAirdrop(): ReactElement {
 	);
 }
 
+export function AboutFarming(): ReactElement {
+	return (
+		<div>
+			<h3 className={'text-xl font-bold'}>{'Farming’s back on the menu'}</h3>
+			<div className={'mt-2 text-neutral-900/80'}>
+				<p>
+					{
+						'You can stake yPrisma to earn wstETH, and stake yCRV or yPrisma Curve LP to earn more yPrisma. Then deposit that yPrisma for more wstETH.'
+					}
+				</p>
+			</div>
+		</div>
+	);
+}
+
 export function AboutCopy({APR}: {APR: {value: number; index: number}}): ReactElement {
 	return (
 		<>
@@ -102,7 +117,7 @@ export function About({APR}: {APR: {value: number; index: number}}): ReactElemen
 					<AboutCopy APR={APR} />
 				</div>
 
-				<div className={'relative col-span-12 mb-16 hidden items-center justify-center md:col-span-4 md:flex'}>
+				<div className={'relative col-span-12 hidden flex-col items-center md:col-span-4 md:flex'}>
 					<Image
 						priority
 						alt={''}

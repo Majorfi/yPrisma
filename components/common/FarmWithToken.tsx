@@ -23,6 +23,136 @@ import type {TAddress} from '@yearn-finance/web-lib/types';
 import type {TNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
 import type {TYDaemonPrices} from '@yearn-finance/web-lib/utils/schemas/yDaemonPricesSchema';
 
+export function Stake({stakingContract, stakingToken, rewardToken, stakingTokenName}: TFarmFactory): ReactElement {
+	const {provider, address, isActive} = useWeb3();
+	const [txStatusApprove, set_txStatusApprove] = useState(defaultTxStatus);
+	const [txStatusStake, set_txStatusStake] = useState(defaultTxStatus);
+	const [amountToUse, set_amountToUse] = useState<TNormalizedBN | undefined>(undefined);
+	const {yDaemonBaseUri} = useYDaemonBaseURI({chainID: 1});
+	const {data: prices} = useFetch<TYDaemonPrices>({
+		endpoint: `${yDaemonBaseUri}/prices/some/${stakingToken},${rewardToken}?humanized=true`,
+		schema: yDaemonPricesSchema
+	});
+
+	const {data: availableToStake, refetch: refetchAvailable} = useContractRead({
+		address: stakingToken,
+		abi: erc20ABI,
+		chainId: DEFAULT_CHAIN_ID,
+		functionName: 'balanceOf',
+		watch: true,
+		args: [toAddress(address)],
+		select: (data): TNormalizedBN => toNormalizedBN(data)
+	});
+
+	const {data: approvedAmount, refetch: refetchAllowance} = useContractRead({
+		address: stakingToken,
+		abi: erc20ABI,
+		chainId: DEFAULT_CHAIN_ID,
+		functionName: 'allowance',
+		args: [toAddress(address), stakingContract],
+		select: (data): TNormalizedBN => toNormalizedBN(data)
+	});
+
+	useEffect((): void => {
+		if (toBigInt(availableToStake?.raw) > 0n) {
+			set_amountToUse(availableToStake);
+		}
+	}, [availableToStake]);
+
+	const onChangeInput = useCallback((value: string): void => {
+		set_amountToUse(handleInputChangeEventValue(value, 18));
+	}, []);
+
+	/**********************************************************************************************
+	 * Actions to Approve, Stake, Unstake and Claim
+	 *********************************************************************************************/
+	const approveToken = useCallback(async (): Promise<void> => {
+		const result = await approveERC20({
+			connector: provider,
+			chainID: DEFAULT_CHAIN_ID,
+			contractAddress: stakingToken,
+			spenderAddress: stakingContract,
+			amount: MAX_UINT_256,
+			statusHandler: set_txStatusApprove
+		});
+		if (result.isSuccessful) {
+			refetchAllowance();
+		}
+	}, [provider, refetchAllowance, stakingContract, stakingToken]);
+
+	const onStake = useCallback(async (): Promise<void> => {
+		const result = await stake({
+			connector: provider,
+			chainID: DEFAULT_CHAIN_ID,
+			contractAddress: stakingContract,
+			amount: toBigInt(amountToUse?.raw),
+			statusHandler: set_txStatusStake
+		});
+		if (result.isSuccessful) {
+			await Promise.all([refetchAvailable(), refetchAllowance()]);
+			set_amountToUse(undefined);
+		}
+	}, [provider, stakingContract, amountToUse?.raw, refetchAvailable, refetchAllowance]);
+
+	return (
+		<div className={'col-span-1 flex flex-col items-center gap-2'}>
+			<AmountInput
+				label={`Available to stake, ${stakingTokenName}`}
+				amount={amountToUse}
+				maxAmount={availableToStake}
+				onAmountChange={onChangeInput}
+				onLegendClick={(): void => set_amountToUse(availableToStake)}
+				onMaxClick={(): void => set_amountToUse(availableToStake)}
+				legend={
+					<div className={'flex flex-row justify-between'}>
+						<p
+							suppressHydrationWarning
+							className={'text-neutral-400'}>
+							{`You have: ${formatAmount(availableToStake?.normalized || 0, 2, 6)} ${stakingTokenName}`}
+						</p>
+						<p
+							suppressHydrationWarning
+							className={'text-neutral-400'}>
+							{`$${formatAmount(
+								Number(amountToUse?.normalized || 0) * Number(prices?.[stakingToken] || 0)
+							)}`}
+						</p>
+					</div>
+				}
+			/>
+			<div className={'mt-6 w-full'}>
+				<div className={'flex w-full gap-4'}>
+					<Button
+						isBusy={txStatusApprove.pending}
+						className={'w-1/2'}
+						isDisabled={
+							!isActive ||
+							!amountToUse ||
+							toBigInt(amountToUse?.raw) === 0n ||
+							toBigInt(amountToUse?.raw) > toBigInt(availableToStake?.raw) ||
+							toBigInt(approvedAmount?.raw) >= toBigInt(amountToUse?.raw)
+						}
+						onClick={approveToken}>
+						{'Approve'}
+					</Button>
+					<Button
+						isBusy={txStatusStake.pending}
+						className={'w-1/2'}
+						isDisabled={
+							!isActive ||
+							!amountToUse ||
+							toBigInt(amountToUse?.raw) === 0n ||
+							toBigInt(approvedAmount?.raw) < toBigInt(amountToUse?.raw)
+						}
+						onClick={onStake}>
+						{'Stake'}
+					</Button>
+				</div>
+			</div>
+		</div>
+	);
+}
+
 type TFarmFactory = {
 	APR: number;
 	tab: string;

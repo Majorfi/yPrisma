@@ -86,7 +86,8 @@ function WalletSelector(): ReactElement {
 }
 
 const nav: TMenu[] = [
-	{path: '/', label: 'Home'},
+	{path: '/', label: 'Farm'},
+	{path: '/airdrop', label: 'Prisma Airdrop'},
 	{path: '/about', label: 'About'}
 ];
 

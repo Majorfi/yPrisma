@@ -17,7 +17,7 @@ export const YPRISMA_REWARD_TOKEN_ADDRESS = toAddress(`0x7f39C581F595B53c5cb19bD
 export const YCRV_ADDRESS = toAddress(`0xFCc5c47bE19d06BF83eB04298b026F81069ff65b`);
 export const YCRV_STAKING_ADDRESS = toAddress(`0x84c94d739e075b3C7431bdb1A005F0412DF828a5`);
 
-export const LP_YPRISMA_ADDRESS = toAddress(`0x69833361991ed76f9e8DBBcdf9ea1520fEbFb4a7`);
+export const LP_YPRISMA_ADDRESS = toAddress(`0x69833361991ed76f9e8dbbcdf9ea1520febfb4a7`);
 export const LP_YPRISMA_STAKING_ADDRESS = toAddress(`0x6806D62AAdF2Ee97cd4BCE46BF5fCD89766EF246`);
 
 export type TAvailableFarm = {

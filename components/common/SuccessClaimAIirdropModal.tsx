@@ -1,10 +1,10 @@
 import {Fragment, useState} from 'react';
 import Confetti from 'react-dom-confetti';
+import Link from 'next/link';
 import {Dialog, Transition} from '@headlessui/react';
 import {useUpdateEffect} from '@react-hookz/web';
+import {Button} from '@yearn-finance/web-lib/components/Button';
 import {cl} from '@yearn-finance/web-lib/utils/cl';
-
-import {StakeBanner} from './StakeBanner';
 
 import type {ReactElement} from 'react';
 
@@ -57,7 +57,7 @@ function SuccessModal({isOpen, set_isOpen}: {isOpen: boolean; set_isOpen: (isOpe
 							<Dialog.Panel
 								className={cl(
 									'relative overflow-hidden rounded-3xl !bg-neutral-200 !p-10 transition-all',
-									'md:my-8 md:w-full md:max-w-2xl md:p-6'
+									'md:my-8 md:w-full md:max-w-lg md:p-6'
 								)}>
 								<div>
 									<div className={'text-center'}>
@@ -79,9 +79,12 @@ function SuccessModal({isOpen, set_isOpen}: {isOpen: boolean; set_isOpen: (isOpe
 										</div>
 									</div>
 								</div>
-
-								<div className={'pt-10 text-left'}>
-									<StakeBanner APR={{value: 342, index: 0}} />
+								<div className={'mt-10 flex items-center justify-center text-center'}>
+									<Link
+										href={'/?tab=stake-yprisma'}
+										passHref>
+										<Button>{'Stake it for a fancy APR!'}</Button>
+									</Link>
 								</div>
 							</Dialog.Panel>
 						</Transition.Child>

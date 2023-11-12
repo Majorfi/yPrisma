@@ -28,7 +28,7 @@ export function ViewClaimAirdrop(): ReactElement {
 	const [userVeCRVClaim, set_userVeCRVClaim] = useState<TClaim | undefined>(undefined);
 	const [userEarlyClaim, set_userEarlyClaim] = useState<TClaim | undefined>(undefined);
 	const [hasCheckedEligibility, set_hasCheckedEligibility] = useState<boolean>(false);
-	const [isSuccessModalOpen, set_isSuccessModalOpen] = useState<boolean>(true);
+	const [isSuccessModalOpen, set_isSuccessModalOpen] = useState<boolean>(false);
 
 	useMountEffect(async (): Promise<void> => {
 		const veCRVProofsCall = axios.get(
