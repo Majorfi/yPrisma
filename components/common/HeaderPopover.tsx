@@ -1,6 +1,7 @@
 import {cloneElement, Fragment, useState} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import {YPRISMA_ADDRESS} from 'utils/constants';
 import {Popover, Transition} from '@headlessui/react';
 
 import {APPS} from './HeaderPopover.apps';
@@ -20,7 +21,7 @@ function LogoPopover(): ReactElement {
 					<span className={'sr-only'}>{'Back to home'}</span>
 					<Image
 						priority
-						src={'/yPrisma.png'}
+						src={`https://assets.smold.app/api/token/1/${YPRISMA_ADDRESS}/logo-128.png`}
 						width={40}
 						height={40}
 						alt={'yPrisma'}

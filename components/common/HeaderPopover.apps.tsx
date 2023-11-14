@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import {LogoYearn} from 'components/icons/LogoYearn';
+import {YPRISMA_ADDRESS} from 'utils/constants';
 import {YCRV_TOKEN_ADDRESS} from '@yearn-finance/web-lib/utils/constants';
 
 import {ImageWithFallback} from './ImageWithFallback';
@@ -73,7 +74,7 @@ export const APPS = {
 		icon: (
 			<Image
 				priority
-				src={'/yPrisma.png'}
+				src={`https://assets.smold.app/api/token/1/${YPRISMA_ADDRESS}/logo-32.png`}
 				width={32}
 				height={32}
 				alt={'yPrisma'}
