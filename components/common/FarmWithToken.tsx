@@ -1,17 +1,15 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import Link from 'next/link';
 import {AmountInput} from 'components/common/AmountInput';
 import {useFetch} from 'hooks/useFetch';
 import {useYDaemonBaseURI} from 'hooks/useYDaemonBaseURI';
 import {STAKING_ABI} from 'utils/abi/stakingContract.abi';
-import {approveERC20, claimRewards, stake, unstake} from 'utils/actions';
+import {approveERC20, claimRewards, exit, stake, unstakeSome} from 'utils/actions';
 import {DEFAULT_CHAIN_ID} from 'utils/constants';
 import {yDaemonPricesSchema} from 'utils/yDaemonPricesSchema';
 import {erc20ABI, useContractRead} from 'wagmi';
 import {Button} from '@yearn-finance/web-lib/components/Button';
 import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
 import {toAddress} from '@yearn-finance/web-lib/utils/address';
-import {cl} from '@yearn-finance/web-lib/utils/cl';
 import {MAX_UINT_256} from '@yearn-finance/web-lib/utils/constants';
 import {toBigInt, toNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
 import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
@@ -35,20 +33,20 @@ type TFarmFactory = {
 };
 export function FarmWithToken({
 	APR,
-	tab,
 	stakingContract,
 	stakingToken,
 	rewardToken,
 	stakingTokenName,
-	rewardTokenName,
-	slug
+	rewardTokenName
 }: TFarmFactory): ReactElement {
 	const {provider, address, isActive} = useWeb3();
 	const [txStatusApprove, set_txStatusApprove] = useState(defaultTxStatus);
 	const [txStatusStake, set_txStatusStake] = useState(defaultTxStatus);
-	const [txStatusUnstake, set_txStatusUnstake] = useState(defaultTxStatus);
+	const [txStatusExit, set_txStatusExit] = useState(defaultTxStatus);
+	const [txStatusUnstakeSome, set_txStatusUnstakeSome] = useState(defaultTxStatus);
 	const [txStatusClaim, set_txStatusClaim] = useState(defaultTxStatus);
-	const [amountToUse, set_amountToUse] = useState<TNormalizedBN | undefined>(undefined);
+	const [amountToStake, set_amountToStake] = useState<TNormalizedBN | undefined>(undefined);
+	const [amountToWithdraw, set_amountToWithdraw] = useState<TNormalizedBN | undefined>(undefined);
 	const {yDaemonBaseUri} = useYDaemonBaseURI({chainID: 1});
 	const {data: prices} = useFetch<TYDaemonPrices>({
 		endpoint: `${yDaemonBaseUri}/prices/some/${stakingToken},${rewardToken}?humanized=true`,
@@ -83,7 +81,7 @@ export function FarmWithToken({
 		select: (data): TNormalizedBN => toNormalizedBN(data)
 	});
 
-	const {data: earned} = useContractRead({
+	const {data: earned, refetch: refetchEarned} = useContractRead({
 		address: stakingContract,
 		abi: STAKING_ABI,
 		chainId: DEFAULT_CHAIN_ID,
@@ -94,19 +92,21 @@ export function FarmWithToken({
 	});
 
 	useEffect((): void => {
+		if (toBigInt(staked?.raw) > 0n) {
+			set_amountToWithdraw(staked);
+		}
+	}, [staked]);
+
+	useEffect((): void => {
 		if (toBigInt(availableToStake?.raw) > 0n) {
-			set_amountToUse(availableToStake);
+			set_amountToStake(availableToStake);
 		}
 	}, [availableToStake]);
-
-	const onChangeInput = useCallback((value: string): void => {
-		set_amountToUse(handleInputChangeEventValue(value, 18));
-	}, []);
 
 	/**********************************************************************************************
 	 * Actions to Approve, Stake, Unstake and Claim
 	 *********************************************************************************************/
-	const approveToken = useCallback(async (): Promise<void> => {
+	const onApproveToken = useCallback(async (): Promise<void> => {
 		const result = await approveERC20({
 			connector: provider,
 			chainID: DEFAULT_CHAIN_ID,
@@ -125,27 +125,41 @@ export function FarmWithToken({
 			connector: provider,
 			chainID: DEFAULT_CHAIN_ID,
 			contractAddress: stakingContract,
-			amount: toBigInt(amountToUse?.raw),
+			amount: toBigInt(amountToStake?.raw),
 			statusHandler: set_txStatusStake
 		});
 		if (result.isSuccessful) {
 			await Promise.all([refetchAvailable(), refetchStacked(), refetchAllowance()]);
-			set_amountToUse(undefined);
+			set_amountToStake(undefined);
 		}
-	}, [provider, stakingContract, amountToUse?.raw, refetchAvailable, refetchStacked, refetchAllowance]);
+	}, [provider, stakingContract, amountToStake?.raw, refetchAvailable, refetchStacked, refetchAllowance]);
 
-	const onUnstake = useCallback(async (): Promise<void> => {
-		const result = await unstake({
+	const onExit = useCallback(async (): Promise<void> => {
+		const result = await exit({
 			connector: provider,
 			chainID: DEFAULT_CHAIN_ID,
 			contractAddress: stakingContract,
-			statusHandler: set_txStatusUnstake
+			statusHandler: set_txStatusExit
+		});
+		if (result.isSuccessful) {
+			await Promise.all([refetchAvailable(), refetchStacked(), refetchAllowance(), refetchEarned()]);
+			set_amountToStake(undefined);
+		}
+	}, [provider, stakingContract, refetchAvailable, refetchStacked, refetchAllowance, refetchEarned]);
+
+	const onUnstakeSome = useCallback(async (): Promise<void> => {
+		const result = await unstakeSome({
+			connector: provider,
+			chainID: DEFAULT_CHAIN_ID,
+			contractAddress: stakingContract,
+			statusHandler: set_txStatusUnstakeSome,
+			amount: toBigInt(amountToWithdraw?.raw)
 		});
 		if (result.isSuccessful) {
 			await Promise.all([refetchAvailable(), refetchStacked(), refetchAllowance()]);
-			set_amountToUse(undefined);
+			set_amountToWithdraw(undefined);
 		}
-	}, [provider, stakingContract, refetchAvailable, refetchStacked, refetchAllowance]);
+	}, [provider, stakingContract, amountToWithdraw?.raw, refetchAvailable, refetchStacked, refetchAllowance]);
 
 	const onClaimRewards = useCallback(async (): Promise<void> => {
 		const result = await claimRewards({
@@ -155,9 +169,9 @@ export function FarmWithToken({
 			statusHandler: set_txStatusClaim
 		});
 		if (result.isSuccessful) {
-			refetchAvailable();
+			await Promise.all([refetchAvailable(), refetchEarned()]);
 		}
-	}, [provider, refetchAvailable, stakingContract]);
+	}, [provider, refetchAvailable, refetchEarned, stakingContract]);
 
 	/**********************************************************************************************
 	 * Some render functions
@@ -166,21 +180,20 @@ export function FarmWithToken({
 		return (
 			<div
 				className={
-					'col-span-1 flex flex-col items-center gap-2 rounded-lg bg-neutral-100 md:col-span-3 md:flex-row md:gap-6'
+					'col-span-1 flex flex-col items-start gap-2 rounded-lg bg-neutral-100 md:col-span-3 md:flex-row md:gap-6'
 				}>
 				<AmountInput
-					label={`Available to stake, ${stakingTokenName}`}
-					amount={amountToUse}
+					amount={amountToStake}
 					maxAmount={availableToStake}
-					onAmountChange={onChangeInput}
-					onLegendClick={(): void => set_amountToUse(availableToStake)}
-					onMaxClick={(): void => set_amountToUse(availableToStake)}
+					onAmountChange={(value): void => set_amountToStake(handleInputChangeEventValue(value, 18))}
+					onLegendClick={(): void => set_amountToStake(availableToStake)}
+					onMaxClick={(): void => set_amountToStake(availableToStake)}
 					legend={
 						<div className={'flex flex-row justify-between'}>
 							<p
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
-								{`You have: ${formatAmount(
+								{`You have ${formatAmount(
 									availableToStake?.normalized || 0,
 									2,
 									6
@@ -190,57 +203,25 @@ export function FarmWithToken({
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(amountToUse?.normalized || 0) * Number(prices?.[stakingToken] || 0)
+									Number(amountToStake?.normalized || 0) * Number(prices?.[stakingToken] || 0)
 								)}`}
 							</p>
 						</div>
 					}
 				/>
-				<div className={'-mx-2'}>
-					<Link
-						href={`/?tab=unstake-${slug}`}
-						scroll={false}
-						replace
-						shallow>
-						<button
-							className={cl(
-								'cursor-pointer rounded-lg p-2 text-xl leading-6',
-								'bg-neutral-100 hover:bg-neutral-200 transition-colors',
-								'rotate-90 md:rotate-0'
-							)}>
-							&#8646;
-						</button>
-					</Link>
-				</div>
-				<AmountInput
-					label={'Future staked amount'}
-					disabled
-					amount={amountToUse}
-					legend={
-						<div className={'flex flex-row justify-end'}>
-							<p
-								suppressHydrationWarning
-								className={'text-neutral-400'}>
-								{`$${formatAmount(
-									Number(amountToUse?.normalized || 0) * Number(prices?.[stakingToken] || 0)
-								)}`}
-							</p>
-						</div>
-					}
-				/>
-				<div className={'mt-4 w-full md:mt-[3px] md:w-[316px]'}>
+				<div className={'mt-4 w-full md:mt-0 md:w-[316px]'}>
 					<div className={'flex w-full gap-4'}>
 						<Button
 							isBusy={txStatusApprove.pending}
 							className={'w-1/2 md:w-[150px]'}
 							isDisabled={
 								!isActive ||
-								!amountToUse ||
-								toBigInt(amountToUse?.raw) === 0n ||
-								toBigInt(amountToUse?.raw) > toBigInt(availableToStake?.raw) ||
-								toBigInt(approvedAmount?.raw) >= toBigInt(amountToUse?.raw)
+								!amountToStake ||
+								toBigInt(amountToStake?.raw) === 0n ||
+								toBigInt(amountToStake?.raw) > toBigInt(availableToStake?.raw) ||
+								toBigInt(approvedAmount?.raw) >= toBigInt(amountToStake?.raw)
 							}
-							onClick={approveToken}>
+							onClick={onApproveToken}>
 							{'Approve'}
 						</Button>
 						<Button
@@ -248,9 +229,9 @@ export function FarmWithToken({
 							className={'w-1/2 md:w-[150px]'}
 							isDisabled={
 								!isActive ||
-								!amountToUse ||
-								toBigInt(amountToUse?.raw) === 0n ||
-								toBigInt(approvedAmount?.raw) < toBigInt(amountToUse?.raw)
+								!amountToStake ||
+								toBigInt(amountToStake?.raw) === 0n ||
+								toBigInt(approvedAmount?.raw) < toBigInt(amountToStake?.raw)
 							}
 							onClick={onStake}>
 							{'Stake'}
@@ -264,15 +245,18 @@ export function FarmWithToken({
 	function renderClaimView(): ReactElement {
 		return (
 			<div
-				className={
-					'col-span-3 flex flex-col items-center gap-0 rounded-lg bg-neutral-100 md:flex-row md:gap-6'
-				}>
+				className={'col-span-3 flex flex-col items-start gap-0 rounded-lg bg-neutral-100 md:flex-row md:gap-6'}>
 				<AmountInput
-					label={`Rewards, ${rewardTokenName}`}
+					// label={`Rewards, ${rewardTokenName}`}
 					disabled
 					amount={earned}
 					legend={
-						<div className={'flex flex-row justify-end'}>
+						<div className={'flex flex-row justify-between'}>
+							<p
+								suppressHydrationWarning
+								className={'text-neutral-400'}>
+								{`You earned ${formatAmount(earned?.normalized || 0, 2, 6)} ${rewardTokenName}`}
+							</p>
 							<p
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
@@ -283,7 +267,7 @@ export function FarmWithToken({
 						</div>
 					}
 				/>
-				<div className={'mt-4 w-full md:mt-[3px] md:w-[316px]'}>
+				<div className={'mt-4 w-full md:mt-0 md:w-[316px]'}>
 					<div className={'flex w-full gap-4'}>
 						<Button
 							isBusy={txStatusClaim.pending}
@@ -302,14 +286,21 @@ export function FarmWithToken({
 		return (
 			<div
 				className={
-					'col-span-1 flex flex-col items-center gap-2 rounded-lg bg-neutral-100 md:col-span-3 md:flex-row md:gap-6'
+					'col-span-1 flex flex-col items-start gap-2 rounded-lg bg-neutral-100 md:col-span-3 md:flex-row md:gap-6'
 				}>
 				<AmountInput
-					label={'Staked amount'}
-					amount={staked}
-					disabled
+					amount={amountToWithdraw}
+					maxAmount={staked}
+					onAmountChange={(value): void => set_amountToWithdraw(handleInputChangeEventValue(value, 18))}
+					onLegendClick={(): void => set_amountToWithdraw(staked)}
+					onMaxClick={(): void => set_amountToWithdraw(staked)}
 					legend={
-						<div className={'flex flex-row justify-end'}>
+						<div className={'flex flex-row justify-between'}>
+							<p
+								suppressHydrationWarning
+								className={'text-neutral-400'}>
+								{`You have ${formatAmount(staked?.normalized || 0, 2, 6)} ${stakingTokenName} staked`}
+							</p>
 							<p
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
@@ -320,47 +311,29 @@ export function FarmWithToken({
 						</div>
 					}
 				/>
-				<div className={'-mx-2'}>
-					<Link
-						href={`/?tab=stake-${slug}`}
-						scroll={false}
-						replace
-						shallow>
-						<button
-							className={cl(
-								'cursor-pointer rounded-lg p-2 text-xl leading-6',
-								'bg-neutral-100 hover:bg-neutral-200 transition-colors',
-								'rotate-90 md:rotate-0'
-							)}>
-							&#8646;
-						</button>
-					</Link>
-				</div>
-				<AmountInput
-					label={`Amount to unstake, ${stakingTokenName}`}
-					disabled
-					amount={staked}
-					legend={
-						<div className={'flex flex-row justify-end'}>
-							<p
-								suppressHydrationWarning
-								className={'text-neutral-400'}>
-								{`$${formatAmount(
-									Number(staked?.normalized || 0) * Number(prices?.[stakingToken] || 0)
-								)}`}
-							</p>
-						</div>
-					}
-				/>
-				<div className={'mt-4 w-full md:mt-[3px] md:w-[316px]'}>
+				<div className={'mt-4 w-full md:mt-0 md:w-[316px]'}>
 					<div className={'flex w-full gap-4'}>
 						<Button
-							key={'unstake button'}
-							isBusy={txStatusUnstake.pending}
-							className={'w-full md:w-[316px]'}
-							isDisabled={!isActive || toBigInt(staked?.raw) === 0n}
-							onClick={onUnstake}>
-							{'Unstake + Claim'}
+							isBusy={txStatusUnstakeSome.pending}
+							className={'w-1/2 md:w-[150px]'}
+							isDisabled={
+								!isActive ||
+								toBigInt(staked?.raw) === 0n ||
+								toBigInt(amountToWithdraw?.raw) === toBigInt(staked?.raw)
+							}
+							onClick={onUnstakeSome}>
+							{'Partial Exit'}
+						</Button>
+						<Button
+							isBusy={txStatusExit.pending}
+							className={'w-1/2 md:w-[150px]'}
+							isDisabled={
+								!isActive ||
+								toBigInt(staked?.raw) === 0n ||
+								toBigInt(amountToWithdraw?.raw) !== toBigInt(staked?.raw)
+							}
+							onClick={onExit}>
+							{'Claim and Exit All'}
 						</Button>
 					</div>
 				</div>
@@ -371,15 +344,27 @@ export function FarmWithToken({
 	return (
 		<>
 			<div className={'col-span-1 w-full items-center rounded-lg bg-neutral-100 md:col-span-3'}>
-				<div className={'mb-20 md:mb-10'}>
-					{tab === `stake-${slug}` && renderStakeView()}
-					{tab === `unstake-${slug}` && renderUnstakeView()}
+				<div>
+					<div className={'pb-2'}>
+						<b>{`Stake, ${stakingTokenName}`}</b>
+					</div>
+					{renderStakeView()}
 				</div>
-
-				<div>{renderClaimView()}</div>
+				<div className={'mt-6'}>
+					<div className={'pb-2'}>
+						<b>{`Unstake, ${stakingTokenName}`}</b>
+					</div>
+					{renderUnstakeView()}
+				</div>
+				<div className={'mt-6'}>
+					<div className={'pb-2'}>
+						<b>{`Rewards, ${rewardTokenName}`}</b>
+					</div>
+					{renderClaimView()}
+				</div>
 			</div>
 
-			<div className={'col-span-1 w-full items-center rounded-lg bg-neutral-100 md:col-span-3'}>
+			<div className={'col-span-1 w-full items-center rounded-lg bg-neutral-100 pt-6 md:col-span-3'}>
 				<dl className={'flex flex-col gap-4 rounded-lg bg-neutral-200 p-4 md:p-6'}>
 					<div>
 						<b className={'text-lg'}>{'Your position details'}</b>

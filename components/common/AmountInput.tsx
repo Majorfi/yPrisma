@@ -34,7 +34,7 @@ export function AmountInput({
 }: TAmountInputProps): ReactElement {
 	return (
 		<div className={'w-full'}>
-			{label && <small className={'block pb-1 text-neutral-900/60'}>{label}</small>}
+			{label && <small className={'block pb-1 text-neutral-900/40'}>{label}</small>}
 			<div className={'relative flex w-full items-center justify-center'}>
 				<input
 					className={cl(
@@ -55,7 +55,7 @@ export function AmountInput({
 					onClick={onMaxClick ? (): void => onMaxClick() : undefined}
 					className={cl(
 						'absolute right-2 ml-2 h-6 cursor-pointer rounded border-none bg-neutral-900 px-2 py-1 text-xs text-neutral-0 transition-colors hover:bg-neutral-700',
-						!!maxAmount && !disabled ? '' : 'hidden pointer-events-none'
+						!!maxAmount && !disabled && maxAmount.raw !== 0n ? '' : 'hidden pointer-events-none'
 					)}>
 					{'Max'}
 				</button>

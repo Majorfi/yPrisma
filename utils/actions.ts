@@ -116,8 +116,8 @@ export async function stake(props: TStake): Promise<TTxResponse> {
 	});
 }
 
-type TUnstake = TWriteTransaction;
-export async function unstake(props: TUnstake): Promise<TTxResponse> {
+type TExit = TWriteTransaction;
+export async function exit(props: TExit): Promise<TTxResponse> {
 	assert(props.connector, 'No connector');
 	assertAddress(props.contractAddress, 'contractAddress');
 
@@ -125,6 +125,22 @@ export async function unstake(props: TUnstake): Promise<TTxResponse> {
 		address: props.contractAddress,
 		abi: STAKING_ABI,
 		functionName: 'exit'
+	});
+}
+
+type TUnstake = TWriteTransaction & {
+	amount: bigint;
+};
+export async function unstakeSome(props: TUnstake): Promise<TTxResponse> {
+	assert(props.connector, 'No connector');
+	assert(props.amount > 0n, 'Amount is 0');
+	assertAddress(props.contractAddress, 'contractAddress');
+
+	return await handleTx(props, {
+		address: props.contractAddress,
+		abi: STAKING_ABI,
+		functionName: 'withdraw',
+		args: [props.amount]
 	});
 }
 
