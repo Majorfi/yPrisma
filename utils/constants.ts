@@ -44,6 +44,15 @@ export const AVAILABLE_FARMS: TAvailableFarm[] = [
 	},
 	{
 		tabIndex: 2,
+		stakingContract: DYFI_STAKING_ADDRESS,
+		stakingToken: YPRISMA_ADDRESS,
+		rewardToken: DYFI_ADDRESS,
+		stakingTokenName: 'yPrisma',
+		rewardTokenName: 'dYFI',
+		slug: 'dyfi'
+	},
+	{
+		tabIndex: 3,
 		stakingContract: YCRV_STAKING_ADDRESS,
 		stakingToken: YCRV_ADDRESS,
 		rewardToken: YPRISMA_ADDRESS,
@@ -52,21 +61,12 @@ export const AVAILABLE_FARMS: TAvailableFarm[] = [
 		slug: 'ycrv'
 	},
 	{
-		tabIndex: 3,
+		tabIndex: 4,
 		stakingContract: LP_YPRISMA_STAKING_ADDRESS,
 		stakingToken: LP_YPRISMA_ADDRESS,
 		rewardToken: YPRISMA_ADDRESS,
 		stakingTokenName: 'yPrisma LP',
 		rewardTokenName: 'yPrisma',
 		slug: 'curve-prisma-lp'
-	},
-	{
-		tabIndex: 4,
-		stakingContract: DYFI_STAKING_ADDRESS,
-		stakingToken: YPRISMA_ADDRESS,
-		rewardToken: DYFI_ADDRESS,
-		stakingTokenName: 'yPrisma',
-		rewardTokenName: 'dYFI',
-		slug: 'dyfi'
 	}
 ];
