@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import {useSearchParams} from 'next/navigation';
-import {About, AboutCopy} from 'components/views/ViewAbout';
-import {ViewClaimAirdrop} from 'components/views/ViewClaimAirdrop';
+import {ImageWithFallback} from 'components/common/ImageWithFallback';
+import {AboutFarmHeading} from 'components/views/ViewAbout';
 import {ViewFarm} from 'components/views/ViewFarm';
 import {ViewMigrationModal} from 'components/views/ViewMigrationModal';
 import {useAPRs} from 'hooks/useAPRs';
@@ -16,7 +17,7 @@ import type {ReactElement} from 'react';
 function Index(): ReactElement {
 	const [selected, set_selected] = useState<number>(0);
 	const pathname = useSearchParams();
-	const [APRS, biggestAPR] = useAPRs(
+	const [APRS] = useAPRs(
 		AVAILABLE_FARMS.map(
 			(farm): TUseAPRProps => ({
 				stakingContract: farm.stakingContract,
@@ -34,17 +35,17 @@ function Index(): ReactElement {
 				return;
 			}
 		}
-		set_selected(0);
+		set_selected(1);
 	}, [pathname]);
 
 	function renderAvailableFarms(): ReactElement {
 		const allFarms = AVAILABLE_FARMS;
-		const farmIndex = selected - 1;
+		let farmIndex = selected - 1;
 		if (selected === 0 || !allFarms[farmIndex]) {
-			return <ViewClaimAirdrop />;
+			farmIndex = 0;
 		}
 
-		const farmArgs = AVAILABLE_FARMS[selected - 1];
+		const farmArgs = AVAILABLE_FARMS[farmIndex];
 		return (
 			<ViewFarm
 				key={farmArgs.slug}
@@ -54,17 +55,45 @@ function Index(): ReactElement {
 						? `unstake-${farmArgs.slug}`
 						: `stake-${farmArgs.slug}`
 				}
-				farmArgs={AVAILABLE_FARMS[selected - 1]}
+				farmArgs={AVAILABLE_FARMS[farmIndex]}
 			/>
 		);
 	}
 
 	return (
-		<div className={'relative mx-auto mb-0 flex w-full flex-col bg-neutral-0 pt-14 md:pt-20'}>
+		<div className={'relative mx-auto mb-0 flex w-full flex-col bg-neutral-0 pt-14'}>
 			<div className={'relative mx-auto mt-6 w-screen max-w-6xl pb-40 '}>
-				<About APR={biggestAPR} />
+				<section className={'grid grid-cols-12 gap-0 md:pt-12'}>
+					<div className={'col-span-12 md:col-span-8 md:mb-0 md:pr-20'}>
+						<div className={'mb-10 flex flex-col justify-center'}>
+							<AboutFarmHeading />
+						</div>
+						<div className={'mb-8 border-neutral-200 py-2 text-neutral-700 md:border-l-4 md:pl-6'}>
+							<div>
+								<h3 className={'text-xl font-bold'}>{'Looks like yield’s back on the menu 🫡'}</h3>
+								<div className={'mt-2 flex flex-col space-y-2 text-neutral-900/80'}>
+									<p>
+										{
+											'You can stake yPrisma, yCRV and yPrisma LP into the farms below. Rewards come in tasty wstETH, dYFI and yPrisma flavors.'
+										}
+									</p>
+									<p>{'DeFi summer was so 2020. Welcome to DeFi early winter 2023. Enjoy.'}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div className={'relative col-span-12 hidden items-start justify-center md:col-span-4 md:flex'}>
+						<Image
+							priority
+							alt={''}
+							src={'./prisma.svg'}
+							width={300}
+							height={300}
+						/>
+					</div>
+				</section>
 
-				<div className={'mt-4 rounded-xl bg-neutral-100'}>
+				<div className={'mt-6 rounded-xl bg-neutral-100'}>
 					<nav
 						className={
 							'mb-3 flex flex-row justify-between gap-6 border-b border-neutral-200/60 p-4 px-6 md:px-10'
@@ -80,27 +109,13 @@ function Index(): ReactElement {
 										<option
 											key={farm.slug}
 											value={farm.tabIndex}>
-											{`Farm with ${farm.stakingTokenName}`}
+											{`Farm ${farm.rewardTokenName} with ${farm.stakingTokenName}`}
 										</option>
 									)
 								)}
 							</select>
 						</div>
-						<div className={'hidden flex-row gap-6 md:flex'}>
-							<Link
-								href={'/'}
-								scroll={false}
-								replace
-								shallow>
-								<button
-									onClick={(): void => set_selected(0)}
-									className={cl(
-										'w-36 rounded-lg p-2 text-center transition-colors cursor-pointer h-full',
-										selected === 0 ? 'bg-neutral-200' : 'bg-neutral-200/0 hover:bg-neutral-200'
-									)}>
-									<p>{'Claim Airdrop'}</p>
-								</button>
-							</Link>
+						<div className={'hidden flex-row flex-wrap gap-6 md:flex'}>
 							{AVAILABLE_FARMS.map(
 								(farm): ReactElement => (
 									<Link
@@ -110,19 +125,46 @@ function Index(): ReactElement {
 										replace
 										shallow>
 										<button
-											onClick={(): void => set_selected(1)}
 											className={cl(
 												'px-4 rounded-lg text-center transition-colors cursor-pointer p-2 w-max',
 												selected === farm.tabIndex
 													? 'bg-neutral-200'
 													: 'bg-neutral-200/0 hover:bg-neutral-200'
 											)}>
-											<p>{`Farm with ${farm.stakingTokenName}`}</p>
-											<p
-												suppressHydrationWarning
-												className={'text-sm opacity-60'}>
-												{`${formatAmount(APRS[farm.tabIndex - 1])}% APR`}
+											<p className={'text-sm'}>
+												<span className={'text-neutral-900/60'}>{'Stake '}</span>
+												<b>{farm.stakingTokenName}</b>
+												<span className={'text-neutral-900/60'}>{', earn '}</span>
+												<b>{farm.rewardTokenName}</b>
 											</p>
+											<div className={'mt-2 flex items-center justify-between space-x-4'}>
+												<div className={'flex gap-2'}>
+													<ImageWithFallback
+														alt={farm.stakingTokenName}
+														className={'h-6 w-6'}
+														width={24}
+														height={24}
+														src={`https://assets.smold.app/api/token/1/${farm.stakingToken}/logo-128.png`}
+														loading={'eager'}
+														priority
+													/>
+													&rarr;
+													<ImageWithFallback
+														alt={farm.rewardTokenName}
+														className={'h-6 w-6'}
+														width={24}
+														height={24}
+														src={`https://assets.smold.app/api/token/1/${farm.rewardToken}/logo-128.png`}
+														loading={'eager'}
+														priority
+													/>
+												</div>
+												<p
+													suppressHydrationWarning
+													className={'text-sm opacity-60'}>
+													{`${formatAmount(APRS[farm.tabIndex - 1])}% APR`}
+												</p>
+											</div>
 										</button>
 									</Link>
 								)
@@ -132,10 +174,6 @@ function Index(): ReactElement {
 					</nav>
 
 					{renderAvailableFarms()}
-				</div>
-
-				<div className={'mt-6 block px-2 md:hidden'}>
-					<AboutCopy APR={biggestAPR} />
 				</div>
 			</div>
 		</div>

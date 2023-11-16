@@ -20,6 +20,9 @@ export const YCRV_STAKING_ADDRESS = toAddress(`0x84c94d739e075b3C7431bdb1A005F04
 export const LP_YPRISMA_ADDRESS = toAddress(`0x69833361991ed76f9e8DBBcdf9ea1520fEbFb4a7`);
 export const LP_YPRISMA_STAKING_ADDRESS = toAddress(`0x6806D62AAdF2Ee97cd4BCE46BF5fCD89766EF246`);
 
+export const DYFI_ADDRESS = toAddress('0x41252E8691e964f7DE35156B68493bAb6797a275');
+export const DYFI_STAKING_ADDRESS = toAddress(`0x93283184650f4d3B4253ABd00978176732118428`);
+
 export type TAvailableFarm = {
 	tabIndex: number;
 	stakingContract: TAddress;
@@ -56,5 +59,14 @@ export const AVAILABLE_FARMS: TAvailableFarm[] = [
 		stakingTokenName: 'yPrisma LP',
 		rewardTokenName: 'yPrisma',
 		slug: 'curve-prisma-lp'
+	},
+	{
+		tabIndex: 4,
+		stakingContract: DYFI_STAKING_ADDRESS,
+		stakingToken: YPRISMA_ADDRESS,
+		rewardToken: DYFI_ADDRESS,
+		stakingTokenName: 'yPrisma',
+		rewardTokenName: 'dYFI',
+		slug: 'dyfi'
 	}
 ];

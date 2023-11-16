@@ -5,6 +5,23 @@ import {StakeBanner} from 'components/common/StakeBanner';
 
 import type {ReactElement} from 'react';
 
+export function AboutFarmHeading(): ReactElement {
+	return (
+		<h1 className={'mt-6 block text-3xl font-black md:text-5xl'}>
+			{'It’s '}
+			<span
+				className={'bg-clip-text text-transparent'}
+				style={{
+					backgroundImage:
+						'-webkit-linear-gradient(0deg, rgba(200,25,40,1) 0%, rgba(219,110,55,1) 20%, rgba(236,184,64,1) 40%, rgba(104,183,120,1) 60%, rgba(71,119,211,1) 80%, rgba(72,44,216,1) 100%)'
+				}}>
+				{'Farmin’'}
+			</span>
+			{' Season'}
+		</h1>
+	);
+}
+
 export function AboutHeading(): ReactElement {
 	return (
 		<h1 className={'mt-6 block text-3xl font-black md:text-5xl'}>
@@ -19,6 +36,27 @@ export function AboutHeading(): ReactElement {
 			</span>
 			{'.'}
 		</h1>
+	);
+}
+
+export function AboutWhyYPrisma(): ReactElement {
+	return (
+		<div className={'p-6 pt-0 md:p-10 md:pt-4'}>
+			<h3 className={'text-xl font-bold'}>{'Why would I claim my PRISMA as yPRISMA?'}</h3>
+			<div className={'mt-2 flex flex-col space-y-2 text-neutral-900/80'}>
+				<p>
+					{
+						'Good question anon. The Prisma airdrop comes as a locked position that cannot be transferred until the lock (of up to 1 year) expires.'
+					}
+				</p>
+				<p>
+					{
+						"By claiming your airdrop using this page, you'll lock your full Prisma airdrop to Yearn in exchange for yPrisma which is (and will always be) transferrable and liquid."
+					}
+				</p>
+				<p>{'yPrisma holders also receieve their share of Prisma protocol rewards. Noice.'}</p>
+			</div>
+		</div>
 	);
 }
 
@@ -91,13 +129,13 @@ export function About({APR}: {APR: {value: number; index: number}}): ReactElemen
 					<AboutCopy APR={APR} />
 				</div>
 
-				<div className={'relative col-span-12 mb-16 hidden items-center justify-center md:col-span-4 md:flex'}>
+				<div className={'relative col-span-12 hidden items-start justify-center md:col-span-4 md:flex'}>
 					<Image
 						priority
 						alt={''}
 						src={'./prisma.svg'}
-						width={400}
-						height={400}
+						width={300}
+						height={300}
 					/>
 				</div>
 			</section>

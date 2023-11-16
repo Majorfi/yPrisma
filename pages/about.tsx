@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import {
 	DEFAULT_CHAIN_ID,
+	DYFI_STAKING_ADDRESS,
 	LP_YPRISMA_STAKING_ADDRESS,
 	PRISMA_ADDRESS,
 	YCRV_STAKING_ADDRESS,
@@ -18,7 +19,7 @@ function Index(): ReactElement {
 	const blockExplorer = getNetwork(DEFAULT_CHAIN_ID).blockExplorers?.etherscan?.url;
 	return (
 		<div>
-			<div className={'relative mx-auto mb-0 flex w-full flex-col bg-neutral-0 pt-14 md:pt-20'}>
+			<div className={'relative mx-auto mb-0 flex w-full flex-col bg-neutral-0 pt-14'}>
 				<div className={'relative mx-auto mt-6 w-screen max-w-6xl pb-40'}>
 					<section className={'grid-cols-12 gap-0 md:grid md:pt-12'}>
 						<div className={'col-span-12 md:col-span-8 md:mb-0 md:pr-20'}>
@@ -66,46 +67,65 @@ function Index(): ReactElement {
 							<b className={'text-lg'}>{'yPrisma deployment addresses'}</b>
 						</div>
 						<dl className={'flex flex-col gap-4 p-4 md:p-6'}>
-							<div className={'flex w-full items-baseline justify-between'}>
+							<div className={'flex w-full flex-col items-baseline justify-between md:flex-row'}>
 								<dt className={'text-neutral-900/60'}>{'Prisma Token'}</dt>
 								<Link
-									className={'cursor-alias hover:underline'}
+									className={'cursor-alias text-xs hover:underline md:text-base'}
 									href={`${blockExplorer}/address/${PRISMA_ADDRESS}`}>
 									<dd className={'font-number'}>{toAddress(PRISMA_ADDRESS)}</dd>
 								</Link>
 							</div>
 
-							<div className={'flex w-full items-baseline justify-between'}>
+							<div className={'flex w-full flex-col items-baseline justify-between md:flex-row'}>
 								<dt className={'text-neutral-900/60'}>{'yPrisma Token'}</dt>
 								<Link
-									className={'cursor-alias hover:underline'}
+									className={'cursor-alias text-xs hover:underline md:text-base'}
 									href={`${blockExplorer}/address/${YPRISMA_ADDRESS}`}>
 									<dd className={'font-number'}>{toAddress(YPRISMA_ADDRESS)}</dd>
 								</Link>
 							</div>
-							<div className={'flex w-full items-baseline justify-between opacity-40'}>
+							<div
+								className={
+									'flex w-full flex-col items-baseline justify-between opacity-40 md:flex-row'
+								}>
 								<dt className={'text-neutral-900/60'}>{'Legacy yPrisma Token'}</dt>
 								<Link
-									className={'cursor-alias hover:underline'}
+									className={'cursor-alias text-xs hover:underline md:text-base'}
 									href={`${blockExplorer}/address/${YPRISMA_LEGACY_ADDRESS}`}>
 									<dd className={'font-number'}>{toAddress(YPRISMA_LEGACY_ADDRESS)}</dd>
 								</Link>
 							</div>
-							<div className={'flex w-full items-baseline justify-between'}>
+							<div className={'flex w-full flex-col items-baseline justify-between md:flex-row'}>
 								<dt className={'text-neutral-900/60'}>{'yPrisma Staking Contract'}</dt>
 								<Link
-									className={'cursor-alias hover:underline'}
+									className={'cursor-alias text-xs hover:underline md:text-base'}
 									href={`${blockExplorer}/address/${YPRISMA_STAKING_ADDRESS}`}>
 									<dd className={'font-number'}>{toAddress(YPRISMA_STAKING_ADDRESS)}</dd>
 								</Link>
 							</div>
-							<div className={'flex w-full items-baseline justify-between'}>
+							<div className={'flex w-full flex-col items-baseline justify-between md:flex-row'}>
 								<dt className={'text-neutral-900/60'}>{'yCRV Staking Contract'}</dt>
-								<dd className={'font-number'}>{toAddress(YCRV_STAKING_ADDRESS)}</dd>
+								<Link
+									className={'cursor-alias text-xs hover:underline md:text-base'}
+									href={`${blockExplorer}/address/${YCRV_STAKING_ADDRESS}`}>
+									<dd className={'font-number'}>{toAddress(YCRV_STAKING_ADDRESS)}</dd>
+								</Link>
 							</div>
-							<div className={'flex w-full items-baseline justify-between'}>
+							<div className={'flex w-full flex-col items-baseline justify-between md:flex-row'}>
 								<dt className={'text-neutral-900/60'}>{'yPrismaLP Staking Contract'}</dt>
-								<dd className={'font-number'}>{toAddress(LP_YPRISMA_STAKING_ADDRESS)}</dd>
+								<Link
+									className={'cursor-alias text-xs hover:underline md:text-base'}
+									href={`${blockExplorer}/address/${LP_YPRISMA_STAKING_ADDRESS}`}>
+									<dd className={'font-number'}>{toAddress(LP_YPRISMA_STAKING_ADDRESS)}</dd>
+								</Link>
+							</div>
+							<div className={'flex w-full flex-col items-baseline justify-between md:flex-row'}>
+								<dt className={'text-neutral-900/60'}>{'dYFI Staking Contract'}</dt>
+								<Link
+									className={'cursor-alias text-xs hover:underline md:text-base'}
+									href={`${blockExplorer}/address/${DYFI_STAKING_ADDRESS}`}>
+									<dd className={'font-number'}>{toAddress(DYFI_STAKING_ADDRESS)}</dd>
+								</Link>
 							</div>
 						</dl>
 					</div>

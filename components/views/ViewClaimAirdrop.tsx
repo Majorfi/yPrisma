@@ -72,9 +72,7 @@ export function ViewClaimAirdrop(): ReactElement {
 	}, [earlyClaims, veCRVClaims, receiver]);
 
 	return (
-		<section
-			id={'stake'}
-			className={'p-6 pt-0 md:p-10 md:pt-4'}>
+		<section className={'p-6 pt-0 md:p-10 md:pt-4'}>
 			<AddressChecker
 				onCheckEligibility={onCheckEligibility}
 				receiver={receiver}
