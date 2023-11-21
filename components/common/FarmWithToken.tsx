@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {AmountInput} from 'components/common/AmountInput';
+import {format, formatDistanceToNow} from 'date-fns';
 import {useFetch} from 'hooks/useFetch';
 import {useYDaemonBaseURI} from 'hooks/useYDaemonBaseURI';
 import {STAKING_ABI} from 'utils/abi/stakingContract.abi';
@@ -20,6 +21,130 @@ import type {ReactElement} from 'react';
 import type {TAddress} from '@yearn-finance/web-lib/types';
 import type {TNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
 import type {TYDaemonPrices} from '@yearn-finance/web-lib/utils/schemas/yDaemonPricesSchema';
+
+type TFarmDetails = {
+	APR: number;
+	stakingContract: TAddress;
+	rewardToken: TAddress;
+	stakingToken: TAddress;
+	stakingTokenName: string;
+	rewardTokenName: string;
+	availableToStake: TNormalizedBN | undefined;
+	staked: TNormalizedBN | undefined;
+	earned: TNormalizedBN | undefined;
+	prices: Partial<{[key: `0x${string}`]: string}> | undefined;
+};
+function Details({
+	APR,
+	rewardToken,
+	stakingToken,
+	stakingContract,
+	stakingTokenName,
+	rewardTokenName,
+	availableToStake,
+	staked,
+	earned,
+	prices
+}: TFarmDetails): ReactElement {
+	const {data: totalSupply} = useContractRead({
+		address: stakingContract,
+		abi: erc20ABI,
+		chainId: DEFAULT_CHAIN_ID,
+		functionName: 'totalSupply',
+		select: (data): TNormalizedBN => toNormalizedBN(data)
+	});
+
+	return (
+		<div className={'col-span-1 w-full items-center rounded-lg bg-neutral-100 pt-6 md:col-span-3'}>
+			<dl className={'flex flex-col gap-4 rounded-lg bg-neutral-200 p-4 md:p-6'}>
+				<div>
+					<b className={'text-lg'}>{'Your position details'}</b>
+				</div>
+
+				<div className={'flex w-full items-baseline justify-between'}>
+					<dt className={'text-xs text-neutral-900/60 md:text-base'}>{'Fancy APR'}</dt>
+					<dd className={'font-number text-lg font-bold leading-6'}>
+						<span
+							suppressHydrationWarning
+							className={'bg-clip-text text-transparent contrast-200'}
+							style={{
+								backgroundImage:
+									'-webkit-linear-gradient(0deg, rgba(219,110,55,1) 20%, rgba(236,184,64,1) 40%, rgba(104,183,120,1) 60%, rgba(71,119,211,1) 80%, rgba(72,44,216,1) 100%)'
+							}}>
+							{`${formatAmount(APR || 0, 2, 2)} %`}
+						</span>
+					</dd>
+				</div>
+
+				<div className={'flex w-full items-baseline justify-between'}>
+					<dt className={'text-xs text-neutral-900/60 md:text-base'}>
+						{`Available to stake, ${stakingTokenName}`}
+					</dt>
+					<dd className={'font-number text-sm font-bold md:text-base'}>
+						{formatAmount(availableToStake?.normalized || 0, 6, 6)}
+					</dd>
+				</div>
+
+				<div className={'flex w-full items-baseline justify-between'}>
+					<dt className={'text-xs text-neutral-900/60 md:text-base'}>
+						{`Already staked, ${stakingTokenName}`}
+					</dt>
+					<dd className={'font-number text-sm font-bold md:text-base'}>
+						{formatAmount(staked?.normalized || 0, 6, 6)}
+					</dd>
+				</div>
+
+				<div className={'flex w-full items-baseline justify-between'}>
+					<dt className={'text-xs text-neutral-900/60 md:text-base'}>
+						{`Amount earned, ${rewardTokenName}`}
+					</dt>
+					<dd>
+						<b className={'font-number block text-sm md:text-base'}>
+							{formatAmount(earned?.normalized || 0, 6, 6)}
+						</b>
+						<small className={'font-number block text-right text-xs text-neutral-900/60'}>
+							{`$ ${formatAmount(Number(earned?.normalized) * Number(prices?.[rewardToken]) || 0, 2, 2)}`}
+						</small>
+					</dd>
+				</div>
+
+				<div className={'h-[1px] w-full bg-neutral-600/20'} />
+				<div className={'flex w-full items-baseline justify-between'}>
+					<dt className={'text-xs text-neutral-900/60 md:text-base'}>
+						{`Total Staked, ${stakingTokenName}`}
+					</dt>
+					<dd>
+						<b className={'font-number block text-sm md:text-base'}>
+							{formatAmount(totalSupply?.normalized || 0, 6, 6)}
+						</b>
+						<small className={'font-number block text-right text-xs text-neutral-900/60'}>
+							{`$ ${formatAmount(
+								Number(totalSupply?.normalized) * Number(prices?.[stakingToken]) || 0,
+								2,
+								2
+							)}`}
+						</small>
+					</dd>
+				</div>
+
+				<div className={'flex w-full items-baseline justify-between'}>
+					<dt className={'text-xs text-neutral-900/60 md:text-base'}>{`Farm expires in`}</dt>
+					<dd className={'text-right'}>
+						<b className={'font-number block text-sm md:text-base'}>
+							{formatDistanceToNow(new Date(2023, 11, 7, 0, 0, 0), {
+								addSuffix: true,
+								includeSeconds: true
+							})}
+						</b>
+						<small className={'font-number block text-right text-xs text-neutral-900/60'}>
+							{format(new Date(2023, 11, 7, 0, 0, 0), 'PPPPpp')}
+						</small>
+					</dd>
+				</div>
+			</dl>
+		</div>
+	);
+}
 
 type TFarmFactory = {
 	APR: number;
@@ -364,64 +489,18 @@ export function FarmWithToken({
 				</div>
 			</div>
 
-			<div className={'col-span-1 w-full items-center rounded-lg bg-neutral-100 pt-6 md:col-span-3'}>
-				<dl className={'flex flex-col gap-4 rounded-lg bg-neutral-200 p-4 md:p-6'}>
-					<div>
-						<b className={'text-lg'}>{'Your position details'}</b>
-					</div>
-
-					<div className={'flex w-full items-baseline justify-between'}>
-						<dt className={'text-xs text-neutral-900/60 md:text-base'}>{'Fancy APR'}</dt>
-						<dd className={'font-number text-lg font-bold leading-6'}>
-							<span
-								suppressHydrationWarning
-								className={'bg-clip-text text-transparent contrast-200'}
-								style={{
-									backgroundImage:
-										'-webkit-linear-gradient(0deg, rgba(219,110,55,1) 20%, rgba(236,184,64,1) 40%, rgba(104,183,120,1) 60%, rgba(71,119,211,1) 80%, rgba(72,44,216,1) 100%)'
-								}}>
-								{`${formatAmount(APR || 0, 2, 2)} %`}
-							</span>
-						</dd>
-					</div>
-
-					<div className={'flex w-full items-baseline justify-between'}>
-						<dt className={'text-xs text-neutral-900/60 md:text-base'}>
-							{`Available to stake, ${stakingTokenName}`}
-						</dt>
-						<dd className={'font-number text-sm font-bold md:text-base'}>
-							{formatAmount(availableToStake?.normalized || 0, 6, 6)}
-						</dd>
-					</div>
-
-					<div className={'flex w-full items-baseline justify-between'}>
-						<dt className={'text-xs text-neutral-900/60 md:text-base'}>
-							{`Already staked, ${stakingTokenName}`}
-						</dt>
-						<dd className={'font-number text-sm font-bold md:text-base'}>
-							{formatAmount(staked?.normalized || 0, 6, 6)}
-						</dd>
-					</div>
-
-					<div className={'flex w-full items-baseline justify-between'}>
-						<dt className={'text-xs text-neutral-900/60 md:text-base'}>
-							{`Amount earned, ${rewardTokenName}`}
-						</dt>
-						<dd>
-							<b className={'font-number block text-sm md:text-base'}>
-								{formatAmount(earned?.normalized || 0, 6, 6)}
-							</b>
-							<small className={'font-number block text-right text-xs text-neutral-900/60'}>
-								{`$ ${formatAmount(
-									Number(earned?.normalized) * Number(prices?.[rewardToken]) || 0,
-									2,
-									2
-								)}`}
-							</small>
-						</dd>
-					</div>
-				</dl>
-			</div>
+			<Details
+				APR={APR}
+				rewardToken={rewardToken}
+				stakingToken={stakingToken}
+				stakingTokenName={stakingTokenName}
+				stakingContract={stakingContract}
+				rewardTokenName={rewardTokenName}
+				availableToStake={availableToStake}
+				staked={staked}
+				earned={earned}
+				prices={prices}
+			/>
 		</>
 	);
 }

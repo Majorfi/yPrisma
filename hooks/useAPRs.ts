@@ -85,7 +85,6 @@ export function useAPRs(props: TUseAPRProps[]): [number[], {value: number; index
 			const secondsPerYear = 31_556_952;
 			const ratePerYear = perStakingTokenRate * secondsPerYear;
 			const stakingRewardAPR = ((Number(ratePerYear) * Number(rewardPrice)) / Number(tokenPrice)) * 100;
-			console.log({stakingRewardAPR});
 			APRs.push(stakingRewardAPR);
 		}
 
