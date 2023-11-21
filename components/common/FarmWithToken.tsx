@@ -113,7 +113,7 @@ function Details({
 					<dt className={'text-xs text-neutral-900/60 md:text-base'}>
 						{`Total Staked, ${stakingTokenName}`}
 					</dt>
-					<dd>
+					<dd className={'text-right'}>
 						<b className={'font-number block text-sm md:text-base'}>
 							{formatAmount(totalSupply?.normalized || 0, 0, 0)}
 						</b>
