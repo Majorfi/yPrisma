@@ -85,14 +85,14 @@ function ClaimEarlyAirdrop(props: {
 					{!isAlive
 						? 'OG Airdrop is not live yet'
 						: !provider
-						? 'Connect Wallet'
-						: !props.hasCheckedEligibility
-						? 'Check eligibility first bro.'
-						: props.claim
-						? isClaimed
-							? 'Already claimed'
-							: `Claim`
-						: 'Oh no! You have nothing to claim'}
+						  ? 'Connect Wallet'
+						  : !props.hasCheckedEligibility
+						    ? 'Check eligibility first bro.'
+						    : props.claim
+						      ? isClaimed
+										? 'Already claimed'
+										: `Claim`
+						      : 'Oh no! You have nothing to claim'}
 				</Button>
 			</div>
 		</div>

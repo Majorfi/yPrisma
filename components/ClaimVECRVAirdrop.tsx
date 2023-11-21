@@ -79,12 +79,12 @@ function ClaimVECRVAirdrop(props: {
 					{!provider
 						? 'Connect Wallet'
 						: !props.hasCheckedEligibility
-						? 'Check eligibility first bro.'
-						: props.claim
-						? isClaimed
-							? 'Already claimed'
-							: `Claim as yPRISMA`
-						: 'Oh no! You have nothing to claim'}
+						  ? 'Check eligibility first bro.'
+						  : props.claim
+						    ? isClaimed
+									? 'Already claimed'
+									: `Claim as yPRISMA`
+						    : 'Oh no! You have nothing to claim'}
 				</Button>
 			</div>
 		</div>

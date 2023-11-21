@@ -115,7 +115,7 @@ function Details({
 					</dt>
 					<dd>
 						<b className={'font-number block text-sm md:text-base'}>
-							{formatAmount(totalSupply?.normalized || 0, 6, 6)}
+							{formatAmount(totalSupply?.normalized || 0, 0, 0)}
 						</b>
 						<small className={'font-number block text-right text-xs text-neutral-900/60'}>
 							{`$ ${formatAmount(
