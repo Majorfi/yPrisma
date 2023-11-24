@@ -74,7 +74,7 @@ export const APPS = {
 		icon: (
 			<Image
 				priority
-				src={`https://assets.smold.app/api/token/1/${YPRISMA_ADDRESS}/logo-32.png`}
+				src={`https://assets.smold.app/api/token/1/${YPRISMA_ADDRESS}/logo-128.png`}
 				width={32}
 				height={32}
 				alt={'yPrisma'}
