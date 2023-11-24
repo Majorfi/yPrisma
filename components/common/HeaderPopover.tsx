@@ -22,8 +22,9 @@ function LogoPopover(): ReactElement {
 					<Image
 						priority
 						src={`${process.env.SMOL_ASSETS_URL}/token/1/${YPRISMA_ADDRESS}/logo-128.png`}
-						width={40}
-						height={40}
+						className={'h-8 w-8'}
+						width={64}
+						height={64}
 						alt={'yPrisma'}
 					/>
 				</Link>
