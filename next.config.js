@@ -30,6 +30,7 @@ module.exports = phase =>
 			ALCHEMY_KEY: process.env.ALCHEMY_KEY,
 			INFURA_PROJECT_ID: process.env.INFURA_PROJECT_ID,
 			WALLETCONNECT_PROJECT_ID: process.env.WALLETCONNECT_PROJECT_ID,
-			YDAEMON_BASE_URI: 'https://ydevmon.ycorpo.com'
+			YDAEMON_BASE_URI: 'https://ydaemon.yearn.fi',
+			SMOL_ASSETS_URL: 'https://assets.smold.app/api'
 		}
 	});

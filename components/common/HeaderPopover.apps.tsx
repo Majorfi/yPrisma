@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import {LogoYearn} from 'components/icons/LogoYearn';
 import {YPRISMA_ADDRESS} from 'utils/constants';
 import {YCRV_TOKEN_ADDRESS} from '@yearn-finance/web-lib/utils/constants';
@@ -23,9 +22,10 @@ export const APPS = {
 		icon: (
 			<ImageWithFallback
 				alt={'yCRV'}
-				width={32}
-				height={32}
-				src={`https://assets.smold.app/api/token/1/${YCRV_TOKEN_ADDRESS}/logo-128.png`}
+				className={'h-8 w-8'}
+				width={64}
+				height={64}
+				src={`${process.env.SMOL_ASSETS_URL}/token/1/${YCRV_TOKEN_ADDRESS}/logo-128.png`}
 				loading={'eager'}
 				priority
 			/>
@@ -60,9 +60,9 @@ export const APPS = {
 			<ImageWithFallback
 				alt={'yETH'}
 				className={'h-8 w-8'}
-				width={32}
-				height={32}
-				src={`https://assets.smold.app/api/token/1/0x1BED97CBC3c24A4fb5C069C6E311a967386131f7/logo-128.png`}
+				width={64}
+				height={64}
+				src={`${process.env.SMOL_ASSETS_URL}/token/1/0x1BED97CBC3c24A4fb5C069C6E311a967386131f7/logo-128.png`}
 				loading={'eager'}
 				priority
 			/>
@@ -72,11 +72,12 @@ export const APPS = {
 		name: 'yPrisma',
 		href: '/',
 		icon: (
-			<Image
+			<ImageWithFallback
 				priority
-				src={`https://assets.smold.app/api/token/1/${YPRISMA_ADDRESS}/logo-128.png`}
-				width={32}
-				height={32}
+				src={`${process.env.SMOL_ASSETS_URL}/token/1/${YPRISMA_ADDRESS}/logo-128.png`}
+				className={'h-8 w-8'}
+				width={64}
+				height={64}
 				alt={'yPrisma'}
 			/>
 		)

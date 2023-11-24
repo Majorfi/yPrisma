@@ -144,7 +144,7 @@ function Index(): ReactElement {
 														className={'h-6 w-6'}
 														width={24}
 														height={24}
-														src={`https://assets.smold.app/api/token/1/${farm.stakingToken}/logo-128.png`}
+														src={`${process.env.SMOL_ASSETS_URL}/token/1/${farm.stakingToken}/logo-32.png`}
 														loading={'eager'}
 														priority
 													/>
@@ -154,7 +154,7 @@ function Index(): ReactElement {
 														className={'h-6 w-6'}
 														width={24}
 														height={24}
-														src={`https://assets.smold.app/api/token/1/${farm.rewardToken}/logo-128.png`}
+														src={`${process.env.SMOL_ASSETS_URL}/token/1/${farm.rewardToken}/logo-32.png`}
 														loading={'eager'}
 														priority
 													/>

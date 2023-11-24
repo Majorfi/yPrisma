@@ -21,7 +21,7 @@ function LogoPopover(): ReactElement {
 					<span className={'sr-only'}>{'Back to home'}</span>
 					<Image
 						priority
-						src={`https://assets.smold.app/api/token/1/${YPRISMA_ADDRESS}/logo-128.png`}
+						src={`${process.env.SMOL_ASSETS_URL}/token/1/${YPRISMA_ADDRESS}/logo-128.png`}
 						width={40}
 						height={40}
 						alt={'yPrisma'}
