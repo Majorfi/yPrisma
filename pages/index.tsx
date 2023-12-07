@@ -9,7 +9,6 @@ import {ViewMigrationModal} from 'components/views/ViewMigrationModal';
 import {useAPRs} from 'hooks/useAPRs';
 import {AVAILABLE_FARMS} from 'utils/constants';
 import {cl} from '@yearn-finance/web-lib/utils/cl';
-import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
 
 import type {TUseAPRProps} from 'hooks/useAPRs';
 import type {ReactElement} from 'react';
@@ -159,11 +158,6 @@ function Index(): ReactElement {
 														priority
 													/>
 												</div>
-												<p
-													suppressHydrationWarning
-													className={'text-sm opacity-60'}>
-													{`${formatAmount(APRS[farm.tabIndex - 1])}% APR`}
-												</p>
 											</div>
 										</button>
 									</Link>
