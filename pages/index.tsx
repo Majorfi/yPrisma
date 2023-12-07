@@ -56,14 +56,13 @@ function Index(): ReactElement {
 						</div>
 						<div className={'mb-8 border-neutral-200 py-2 text-neutral-700 md:border-l-4 md:pl-6'}>
 							<div>
-								<h3 className={'text-xl font-bold'}>{'Looks like yield’s back on the menu 🫡'}</h3>
+								<h3 className={'text-xl font-bold'}>{'Time to harvest those crops anon.'}</h3>
 								<div className={'mt-2 flex flex-col space-y-2 text-neutral-900/80'}>
 									<p>
 										{
-											'You can stake yPrisma, yCRV and yPrisma LP into the farms below. Rewards come in tasty wstETH, dYFI and yPrisma flavors.'
+											"Seasons come and seasons go, time to roll up your sleeves and harvest any rewards that might be waiting for you. You can also use this page to withdraw your deposited tokens, if you're so inclined."
 										}
 									</p>
-									<p>{'DeFi summer was so 2020. Welcome to DeFi early winter 2023. Enjoy.'}</p>
 								</div>
 							</div>
 						</div>
