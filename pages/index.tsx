@@ -6,25 +6,14 @@ import {ImageWithFallback} from 'components/common/ImageWithFallback';
 import {AboutFarmHeading} from 'components/views/ViewAbout';
 import {ViewFarm} from 'components/views/ViewFarm';
 import {ViewMigrationModal} from 'components/views/ViewMigrationModal';
-import {useAPRs} from 'hooks/useAPRs';
 import {AVAILABLE_FARMS} from 'utils/constants';
 import {cl} from '@yearn-finance/web-lib/utils/cl';
 
-import type {TUseAPRProps} from 'hooks/useAPRs';
 import type {ReactElement} from 'react';
 
 function Index(): ReactElement {
 	const [selected, set_selected] = useState<number>(0);
 	const pathname = useSearchParams();
-	const [APRS] = useAPRs(
-		AVAILABLE_FARMS.map(
-			(farm): TUseAPRProps => ({
-				stakingContract: farm.stakingContract,
-				stakingToken: farm.stakingToken,
-				rewardToken: farm.rewardToken
-			})
-		)
-	);
 
 	useEffect((): void => {
 		const currentTab = pathname.get('tab');
@@ -48,7 +37,6 @@ function Index(): ReactElement {
 		return (
 			<ViewFarm
 				key={farmArgs.slug}
-				APR={APRS[farmIndex]}
 				currentTab={
 					pathname.get('tab') === `unstake-${farmArgs.slug}`
 						? `unstake-${farmArgs.slug}`
