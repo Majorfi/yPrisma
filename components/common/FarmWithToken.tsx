@@ -3,7 +3,7 @@ import {AmountInput} from 'components/common/AmountInput';
 import {useFetch} from 'hooks/useFetch';
 import {useYDaemonBaseURI} from 'hooks/useYDaemonBaseURI';
 import {STAKING_ABI} from 'utils/abi/stakingContract.abi';
-import {exit, unstakeSome} from 'utils/actions';
+import {exit} from 'utils/actions';
 import {DEFAULT_CHAIN_ID} from 'utils/constants';
 import {yDaemonPricesSchema} from 'utils/yDaemonPricesSchema';
 import {erc20ABI, useContractRead} from 'wagmi';
@@ -120,7 +120,6 @@ export function FarmWithToken({
 }: TFarmFactory): ReactElement {
 	const {provider, address, isActive} = useWeb3();
 	const [txStatusExit, set_txStatusExit] = useState(defaultTxStatus);
-	const [txStatusUnstakeSome, set_txStatusUnstakeSome] = useState(defaultTxStatus);
 	const [amountToWithdraw, set_amountToWithdraw] = useState<TNormalizedBN | undefined>(undefined);
 	const {yDaemonBaseUri} = useYDaemonBaseURI({chainID: 1});
 	const {data: prices} = useFetch<TYDaemonPrices>({
@@ -154,7 +153,7 @@ export function FarmWithToken({
 	}, [staked]);
 
 	/**********************************************************************************************
-	 * Actions to Exit and Unstake
+	 * Action to Exit
 	 *********************************************************************************************/
 
 	const onExit = useCallback(async (): Promise<void> => {
@@ -168,20 +167,6 @@ export function FarmWithToken({
 			await Promise.all([refetchStacked(), refetchEarned()]);
 		}
 	}, [provider, stakingContract, refetchStacked, refetchEarned]);
-
-	const onUnstakeSome = useCallback(async (): Promise<void> => {
-		const result = await unstakeSome({
-			connector: provider,
-			chainID: DEFAULT_CHAIN_ID,
-			contractAddress: stakingContract,
-			statusHandler: set_txStatusUnstakeSome,
-			amount: toBigInt(amountToWithdraw?.raw)
-		});
-		if (result.isSuccessful) {
-			await Promise.all([refetchStacked()]);
-			set_amountToWithdraw(undefined);
-		}
-	}, [provider, stakingContract, amountToWithdraw?.raw, refetchStacked]);
 
 	function renderUnstakeView(): ReactElement {
 		return (
@@ -215,19 +200,8 @@ export function FarmWithToken({
 				<div className={'mt-4 w-full md:mt-0 md:w-[316px]'}>
 					<div className={'flex w-full gap-4'}>
 						<Button
-							isBusy={txStatusUnstakeSome.pending}
-							className={'w-1/2 md:w-[150px]'}
-							isDisabled={
-								!isActive ||
-								toBigInt(staked?.raw) === 0n ||
-								toBigInt(amountToWithdraw?.raw) === toBigInt(staked?.raw)
-							}
-							onClick={onUnstakeSome}>
-							{'Partial Exit'}
-						</Button>
-						<Button
 							isBusy={txStatusExit.pending}
-							className={'w-1/2 md:w-[150px]'}
+							className={'w-full'}
 							isDisabled={
 								!isActive ||
 								toBigInt(staked?.raw) === 0n ||
