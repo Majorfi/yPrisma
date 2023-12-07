@@ -68,7 +68,7 @@ function Airdrop(): ReactElement {
 								</div>
 							</div>
 						</div>
-						<div className={'mb-4 hidden md:block'}>
+						<div className={'mb-4 hidden'}>
 							<StakeBanner APR={biggestAPR} />
 						</div>
 					</div>
