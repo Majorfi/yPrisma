@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {useSearchParams} from 'next/navigation';
-import {ImageWithFallback} from 'components/common/ImageWithFallback';
 import {AboutFarmHeading} from 'components/views/ViewAbout';
 import {ViewFarm} from 'components/views/ViewFarm';
 import {ViewMigrationModal} from 'components/views/ViewMigrationModal';
@@ -96,7 +95,7 @@ function Index(): ReactElement {
 										<option
 											key={farm.slug}
 											value={farm.tabIndex}>
-											{`Farm ${farm.rewardTokenName} with ${farm.stakingTokenName}`}
+											{`Unstake ${farm.stakingTokenName} from ${farm.rewardTokenName} farm `}
 										</option>
 									)
 								)}
@@ -119,34 +118,11 @@ function Index(): ReactElement {
 													: 'bg-neutral-200/0 hover:bg-neutral-200'
 											)}>
 											<p className={'text-sm'}>
-												<span className={'text-neutral-900/60'}>{'Stake '}</span>
+												<span className={'text-neutral-900/60'}>{'Unstake '}</span>
 												<b>{farm.stakingTokenName}</b>
-												<span className={'text-neutral-900/60'}>{', earn '}</span>
+												<span className={'text-neutral-900/60'}>{' from '}</span>
 												<b>{farm.rewardTokenName}</b>
 											</p>
-											<div className={'mt-2 flex items-center justify-between space-x-4'}>
-												<div className={'flex gap-2'}>
-													<ImageWithFallback
-														alt={farm.stakingTokenName}
-														className={'h-6 w-6'}
-														width={24}
-														height={24}
-														src={`${process.env.SMOL_ASSETS_URL}/token/1/${farm.stakingToken}/logo-32.png`}
-														loading={'eager'}
-														priority
-													/>
-													&rarr;
-													<ImageWithFallback
-														alt={farm.rewardTokenName}
-														className={'h-6 w-6'}
-														width={24}
-														height={24}
-														src={`${process.env.SMOL_ASSETS_URL}/token/1/${farm.rewardToken}/logo-32.png`}
-														loading={'eager'}
-														priority
-													/>
-												</div>
-											</div>
 										</button>
 									</Link>
 								)
