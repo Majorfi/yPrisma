@@ -6,6 +6,7 @@ import {AboutFarmHeading} from 'components/views/ViewAbout';
 import {ViewFarm} from 'components/views/ViewFarm';
 import {ViewMigrationModal} from 'components/views/ViewMigrationModal';
 import {AVAILABLE_FARMS} from 'utils/constants';
+import {Button} from '@yearn-finance/web-lib/components/Button';
 import {cl} from '@yearn-finance/web-lib/utils/cl';
 
 import type {ReactElement} from 'react';
@@ -56,13 +57,31 @@ function Index(): ReactElement {
 						</div>
 						<div className={'mb-8 border-neutral-200 py-2 text-neutral-700 md:border-l-4 md:pl-6'}>
 							<div>
-								<h3 className={'text-xl font-bold'}>{'Time to harvest those crops anon.'}</h3>
+								<h3 className={'text-xl font-bold'}>{'When one door closes, another opens...'}</h3>
 								<div className={'mt-2 flex flex-col space-y-2 text-neutral-900/80'}>
 									<p>
 										{
-											"Seasons come and seasons go, time to roll up your sleeves and harvest any rewards that might be waiting for you. You can also use this page to withdraw your deposited tokens, if you're so inclined."
+											'You can harvest any rewards waiting for you and withdraw any deposited tokens. But worry not anon, you can put your yPrisma to work elsewhere such as… hmm… the '
+										}
+										<Link
+											href={
+												'https://yearn.fi/vaults/1/0xbA61BaA1D96c2F4E25205B331306507BcAeA4677'
+											}
+											className={'font-bold hover:underline'}>
+											{'yPrisma LP Vault'}
+										</Link>
+										{'!'}
+									</p>
+									<p>
+										{
+											'Sit back and chill while the PRISMA flywheel and Yearn strategies do the hard work for you. Welcome to the good life.'
 										}
 									</p>
+								</div>
+								<div className={'mt-4'}>
+									<Link href={'https://yearn.fi/vaults/1/0xbA61BaA1D96c2F4E25205B331306507BcAeA4677'}>
+										<Button>{'To the Vault!'}</Button>
+									</Link>
 								</div>
 							</div>
 						</div>

@@ -14,9 +14,9 @@ export function AboutFarmHeading(): ReactElement {
 					backgroundImage:
 						'-webkit-linear-gradient(0deg, rgba(200,25,40,1) 0%, rgba(219,110,55,1) 20%, rgba(236,184,64,1) 40%, rgba(104,183,120,1) 60%, rgba(71,119,211,1) 80%, rgba(72,44,216,1) 100%)'
 				}}>
-				{'Farmin’'}
+				{'Harvest'}
 			</span>
-			{' Season is Over'}
+			{' time'}
 		</h1>
 	);
 }
