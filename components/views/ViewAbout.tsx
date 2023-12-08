@@ -8,7 +8,6 @@ import type {ReactElement} from 'react';
 export function AboutFarmHeading(): ReactElement {
 	return (
 		<h1 className={'mt-6 block text-3xl font-black md:text-5xl'}>
-			{'It’s '}
 			<span
 				className={'bg-clip-text text-transparent'}
 				style={{
@@ -17,7 +16,7 @@ export function AboutFarmHeading(): ReactElement {
 				}}>
 				{'Farmin’'}
 			</span>
-			{' Season'}
+			{' Season is Over'}
 		</h1>
 	);
 }
