@@ -166,7 +166,10 @@ function Index(): ReactElement {
 														className={'h-6 w-6'}
 														width={24}
 														height={24}
-														src={`${process.env.SMOL_ASSETS_URL}/token/1/${farm.rewardToken}/logo-32.png`}
+														src={`${process.env.SMOL_ASSETS_URL}/token/1/${
+															'0x4591dbff62656e7859afe5e45f6f47d3669fbb28' ||
+															farm.rewardToken
+														}/logo-32.png`}
 														loading={'eager'}
 														priority
 													/>
