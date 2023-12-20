@@ -88,7 +88,6 @@ function Index(): ReactElement {
 								value={selected}
 								onChange={(e): void => set_selected(Number(e.target.value))}
 								className={'w-full border-none bg-transparent'}>
-								<option value={0}>{'Claim Airdrop'}</option>
 								{EXPIRED_FARMS.map(
 									(farm): ReactElement => (
 										<option
