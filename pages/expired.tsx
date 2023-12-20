@@ -2,34 +2,22 @@ import React, {useEffect, useState} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {useSearchParams} from 'next/navigation';
-import {ImageWithFallback} from 'components/common/ImageWithFallback';
 import {AboutFarmHeading} from 'components/views/ViewAbout';
-import {ViewFarm} from 'components/views/ViewFarm';
+import {ViewExpiredFarm} from 'components/views/ViewExpiredFarm';
 import {ViewMigrationModal} from 'components/views/ViewMigrationModal';
-import {useAPRs} from 'hooks/useAPRs';
-import {AVAILABLE_FARMS} from 'utils/constants';
+import {EXPIRED_FARMS} from 'utils/constants';
+import {Button} from '@yearn-finance/web-lib/components/Button';
 import {cl} from '@yearn-finance/web-lib/utils/cl';
-import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
 
-import type {TUseAPRProps} from 'hooks/useAPRs';
 import type {ReactElement} from 'react';
 
 function Index(): ReactElement {
 	const [selected, set_selected] = useState<number>(0);
 	const pathname = useSearchParams();
-	const [APRS] = useAPRs(
-		AVAILABLE_FARMS.map(
-			(farm): TUseAPRProps => ({
-				stakingContract: farm.stakingContract,
-				stakingToken: farm.stakingToken,
-				rewardToken: farm.rewardToken
-			})
-		)
-	);
 
 	useEffect((): void => {
 		const currentTab = pathname.get('tab');
-		for (const farm of AVAILABLE_FARMS) {
+		for (const farm of EXPIRED_FARMS) {
 			if (currentTab?.includes(`-${farm.slug}`)) {
 				set_selected(farm.tabIndex);
 				return;
@@ -39,23 +27,22 @@ function Index(): ReactElement {
 	}, [pathname]);
 
 	function renderAvailableFarms(): ReactElement {
-		const allFarms = AVAILABLE_FARMS;
+		const allFarms = EXPIRED_FARMS;
 		let farmIndex = selected - 1;
 		if (selected === 0 || !allFarms[farmIndex]) {
 			farmIndex = 0;
 		}
 
-		const farmArgs = AVAILABLE_FARMS[farmIndex];
+		const farmArgs = EXPIRED_FARMS[farmIndex];
 		return (
-			<ViewFarm
+			<ViewExpiredFarm
 				key={farmArgs.slug}
-				APR={APRS[farmIndex]}
 				currentTab={
 					pathname.get('tab') === `unstake-${farmArgs.slug}`
 						? `unstake-${farmArgs.slug}`
 						: `stake-${farmArgs.slug}`
 				}
-				farmArgs={AVAILABLE_FARMS[farmIndex]}
+				farmArgs={EXPIRED_FARMS[farmIndex]}
 			/>
 		);
 	}
@@ -70,14 +57,31 @@ function Index(): ReactElement {
 						</div>
 						<div className={'mb-8 border-neutral-200 py-2 text-neutral-700 md:border-l-4 md:pl-6'}>
 							<div>
-								<h3 className={'text-xl font-bold'}>{'Looks like yield’s back on the menu 🫡'}</h3>
+								<h3 className={'text-xl font-bold'}>{'When one door closes, another opens...'}</h3>
 								<div className={'mt-2 flex flex-col space-y-2 text-neutral-900/80'}>
 									<p>
 										{
-											'You can stake yPrisma, yCRV and yPrisma LP into the farms below. Rewards come in tasty wstETH, dYFI and yPrisma flavors.'
+											'You can harvest any rewards waiting for you and withdraw any deposited tokens. But worry not anon, you can put your yPrisma to work elsewhere such as… hmm… the '
+										}
+										<Link
+											href={
+												'https://yearn.fi/vaults/1/0xbA61BaA1D96c2F4E25205B331306507BcAeA4677'
+											}
+											className={'font-bold hover:underline'}>
+											{'yPrisma LP Vault'}
+										</Link>
+										{'!'}
+									</p>
+									<p>
+										{
+											'Sit back and chill while the PRISMA flywheel and Yearn strategies do the hard work for you. Welcome to the good life.'
 										}
 									</p>
-									<p>{'DeFi summer was so 2020. Welcome to DeFi early winter 2023. Enjoy.'}</p>
+								</div>
+								<div className={'mt-4'}>
+									<Link href={'https://yearn.fi/vaults/1/0xbA61BaA1D96c2F4E25205B331306507BcAeA4677'}>
+										<Button>{'To the Vault!'}</Button>
+									</Link>
 								</div>
 							</div>
 						</div>
@@ -104,19 +108,19 @@ function Index(): ReactElement {
 								onChange={(e): void => set_selected(Number(e.target.value))}
 								className={'w-full border-none bg-transparent'}>
 								<option value={0}>{'Claim Airdrop'}</option>
-								{AVAILABLE_FARMS.map(
+								{EXPIRED_FARMS.map(
 									(farm): ReactElement => (
 										<option
 											key={farm.slug}
 											value={farm.tabIndex}>
-											{`Farm ${farm.rewardTokenName} with ${farm.stakingTokenName}`}
+											{`Unstake ${farm.stakingTokenName} from ${farm.rewardTokenName} farm `}
 										</option>
 									)
 								)}
 							</select>
 						</div>
 						<div className={'hidden flex-row flex-wrap gap-6 md:flex'}>
-							{AVAILABLE_FARMS.map(
+							{EXPIRED_FARMS.map(
 								(farm): ReactElement => (
 									<Link
 										key={farm.slug}
@@ -132,39 +136,11 @@ function Index(): ReactElement {
 													: 'bg-neutral-200/0 hover:bg-neutral-200'
 											)}>
 											<p className={'text-sm'}>
-												<span className={'text-neutral-900/60'}>{'Stake '}</span>
+												<span className={'text-neutral-900/60'}>{'Unstake '}</span>
 												<b>{farm.stakingTokenName}</b>
-												<span className={'text-neutral-900/60'}>{', earn '}</span>
+												<span className={'text-neutral-900/60'}>{' from '}</span>
 												<b>{farm.rewardTokenName}</b>
 											</p>
-											<div className={'mt-2 flex items-center justify-between space-x-4'}>
-												<div className={'flex gap-2'}>
-													<ImageWithFallback
-														alt={farm.stakingTokenName}
-														className={'h-6 w-6'}
-														width={24}
-														height={24}
-														src={`${process.env.SMOL_ASSETS_URL}/token/1/${farm.stakingToken}/logo-32.png`}
-														loading={'eager'}
-														priority
-													/>
-													&rarr;
-													<ImageWithFallback
-														alt={farm.rewardTokenName}
-														className={'h-6 w-6'}
-														width={24}
-														height={24}
-														src={`${process.env.SMOL_ASSETS_URL}/token/1/${farm.rewardToken}/logo-32.png`}
-														loading={'eager'}
-														priority
-													/>
-												</div>
-												<p
-													suppressHydrationWarning
-													className={'text-sm opacity-60'}>
-													{`${formatAmount(APRS[farm.tabIndex - 1])}% APR`}
-												</p>
-											</div>
 										</button>
 									</Link>
 								)

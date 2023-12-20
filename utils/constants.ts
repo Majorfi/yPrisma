@@ -32,7 +32,20 @@ export type TAvailableFarm = {
 	rewardTokenName: string;
 	slug: string;
 };
+
 export const AVAILABLE_FARMS: TAvailableFarm[] = [
+	{
+		tabIndex: 1,
+		stakingContract: toAddress('0xE3EE395C9067dD15C492Ca950B101a7d6c85b5Fc'),
+		stakingToken: toAddress('0xe3668873D944E4A949DA05fc8bDE419eFF543882'),
+		rewardToken: toAddress('0x04AeBe2e4301CdF5E9c57B01eBdfe4Ac4B48DD13'),
+		stakingTokenName: 'yPrisma',
+		rewardTokenName: 'yvmkUSD-A',
+		slug: 'yprisma-yvmkusd'
+	}
+];
+
+export const EXPIRED_FARMS: TAvailableFarm[] = [
 	{
 		tabIndex: 1,
 		stakingContract: YPRISMA_STAKING_ADDRESS,

@@ -86,9 +86,10 @@ function WalletSelector(): ReactElement {
 }
 
 const nav: TMenu[] = [
-	{path: '/', label: 'Farming'},
+	{path: '/', label: 'Earn'},
+	{path: '/about', label: 'About'},
 	{path: '/airdrop', label: 'Prisma Airdrop'},
-	{path: '/about', label: 'About'}
+	{path: '/expired', label: 'Expired Farms'}
 ];
 
 function AppHeader(): ReactElement {
