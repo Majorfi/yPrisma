@@ -8,15 +8,32 @@ import type {ReactElement} from 'react';
 export function AboutFarmHeading(): ReactElement {
 	return (
 		<h1 className={'mt-6 block text-3xl font-black md:text-5xl'}>
+			{'Put your '}
 			<span
 				className={'bg-clip-text text-transparent'}
 				style={{
 					backgroundImage:
 						'-webkit-linear-gradient(0deg, rgba(200,25,40,1) 0%, rgba(219,110,55,1) 20%, rgba(236,184,64,1) 40%, rgba(104,183,120,1) 60%, rgba(71,119,211,1) 80%, rgba(72,44,216,1) 100%)'
 				}}>
-				{'Harvest'}
+				{'yPRISMA'}
 			</span>
-			{' time'}
+			{' to work'}
+		</h1>
+	);
+}
+
+export function AboutHarvestHeading(): ReactElement {
+	return (
+		<h1 className={'mt-6 block text-3xl font-black md:text-5xl'}>
+			<span
+				className={'bg-clip-text text-transparent'}
+				style={{
+					backgroundImage:
+						'-webkit-linear-gradient(0deg, rgba(200,25,40,1) 0%, rgba(219,110,55,1) 20%, rgba(236,184,64,1) 40%, rgba(104,183,120,1) 60%, rgba(71,119,211,1) 80%, rgba(72,44,216,1) 100%)'
+				}}>
+				{"Farmin'"}
+			</span>
+			{' tumbleweed anon?'}
 		</h1>
 	);
 }
@@ -24,16 +41,15 @@ export function AboutFarmHeading(): ReactElement {
 export function AboutHeading(): ReactElement {
 	return (
 		<h1 className={'mt-6 block text-3xl font-black md:text-5xl'}>
-			{"Prisma has been unleashed.\nNow let's get it "}
 			<span
 				className={'bg-clip-text text-transparent'}
 				style={{
 					backgroundImage:
 						'-webkit-linear-gradient(0deg, rgba(200,25,40,1) 0%, rgba(219,110,55,1) 20%, rgba(236,184,64,1) 40%, rgba(104,183,120,1) 60%, rgba(71,119,211,1) 80%, rgba(72,44,216,1) 100%)'
 				}}>
-				{'unlocked'}
+				{'Prisma'}
 			</span>
-			{'.'}
+			{' Airdrop'}
 		</h1>
 	);
 }

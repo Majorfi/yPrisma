@@ -70,14 +70,26 @@ function Index(): ReactElement {
 						</div>
 						<div className={'mb-8 border-neutral-200 py-2 text-neutral-700 md:border-l-4 md:pl-6'}>
 							<div>
-								<h3 className={'text-xl font-bold'}>{'Looks like yield’s back on the menu 🫡'}</h3>
+								<h3 className={'text-xl font-bold'}>{"Yearn's vePRISMA, your yield."}</h3>
 								<div className={'mt-2 flex flex-col space-y-2 text-neutral-900/80'}>
 									<p>
 										{
-											'You can stake yPrisma, yCRV and yPrisma LP into the farms below. Rewards come in tasty wstETH, dYFI and yPrisma flavors.'
+											"Deposit yPRISMA to this staking contract to collect yield from Yearn's vePRISMA position. This includes protocol fees and bribe yield from incenvtive voting."
 										}
 									</p>
-									<p>{'DeFi summer was so 2020. Welcome to DeFi early winter 2023. Enjoy.'}</p>
+									<p>
+										{
+											"Note: this farm will eventually be superceeded by Yearn's permanant staking contract which is scheduled for audit. Find information "
+										}
+										<Link
+											href={'https://medium.com/iearn/yprisma-roadmap-8fb3e2376594'}
+											target={'_blank'}
+											rel={'noopener noreferrer'}
+											className={'underline'}>
+											{'here'}
+										</Link>
+										{'.'}
+									</p>
 								</div>
 							</div>
 						</div>

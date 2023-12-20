@@ -2,11 +2,10 @@ import React, {useEffect, useState} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {useSearchParams} from 'next/navigation';
-import {AboutFarmHeading} from 'components/views/ViewAbout';
+import {AboutHarvestHeading} from 'components/views/ViewAbout';
 import {ViewExpiredFarm} from 'components/views/ViewExpiredFarm';
 import {ViewMigrationModal} from 'components/views/ViewMigrationModal';
 import {EXPIRED_FARMS} from 'utils/constants';
-import {Button} from '@yearn-finance/web-lib/components/Button';
 import {cl} from '@yearn-finance/web-lib/utils/cl';
 
 import type {ReactElement} from 'react';
@@ -53,35 +52,17 @@ function Index(): ReactElement {
 				<section className={'grid grid-cols-12 gap-0 md:pt-12'}>
 					<div className={'col-span-12 md:col-span-8 md:mb-0 md:pr-20'}>
 						<div className={'mb-10 flex flex-col justify-center'}>
-							<AboutFarmHeading />
+							<AboutHarvestHeading />
 						</div>
 						<div className={'mb-8 border-neutral-200 py-2 text-neutral-700 md:border-l-4 md:pl-6'}>
 							<div>
-								<h3 className={'text-xl font-bold'}>{'When one door closes, another opens...'}</h3>
+								<h3 className={'text-xl font-bold'}>{'These farms are no longer in use'}</h3>
 								<div className={'mt-2 flex flex-col space-y-2 text-neutral-900/80'}>
 									<p>
 										{
-											'You can harvest any rewards waiting for you and withdraw any deposited tokens. But worry not anon, you can put your yPrisma to work elsewhere such as… hmm… the '
-										}
-										<Link
-											href={
-												'https://yearn.fi/vaults/1/0xbA61BaA1D96c2F4E25205B331306507BcAeA4677'
-											}
-											className={'font-bold hover:underline'}>
-											{'yPrisma LP Vault'}
-										</Link>
-										{'!'}
-									</p>
-									<p>
-										{
-											'Sit back and chill while the PRISMA flywheel and Yearn strategies do the hard work for you. Welcome to the good life.'
+											'If you farmed a yPRISMA farm in the past, you can find a list of them here and use the buttons to withdraw.'
 										}
 									</p>
-								</div>
-								<div className={'mt-4'}>
-									<Link href={'https://yearn.fi/vaults/1/0xbA61BaA1D96c2F4E25205B331306507BcAeA4677'}>
-										<Button>{'To the Vault!'}</Button>
-									</Link>
 								</div>
 							</div>
 						</div>

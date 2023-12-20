@@ -100,7 +100,7 @@ function AppHeader(): ReactElement {
 		<div
 			id={'head'}
 			className={'fixed inset-x-0 top-0 z-50 w-full bg-neutral-0/95'}>
-			<div className={'mx-auto max-w-5xl'}>
+			<div className={'mx-auto max-w-5xl !px-0'}>
 				<header className={'yearn--header'}>
 					<Navbar
 						currentPathName={pathname || ''}
