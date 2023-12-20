@@ -4,6 +4,8 @@ import {
 	DEFAULT_CHAIN_ID,
 	DYFI_STAKING_ADDRESS,
 	LP_YPRISMA_STAKING_ADDRESS,
+	MKUSD_YVAULT_ADDRESS,
+	MKUSD_YVAULT_STAKING_ADDRESS,
 	PRISMA_ADDRESS,
 	YCRV_STAKING_ADDRESS,
 	YPRISMA_ADDRESS,
@@ -125,6 +127,22 @@ function Index(): ReactElement {
 									className={'cursor-alias text-xs hover:underline md:text-base'}
 									href={`${blockExplorer}/address/${DYFI_STAKING_ADDRESS}`}>
 									<dd className={'font-number'}>{toAddress(DYFI_STAKING_ADDRESS)}</dd>
+								</Link>
+							</div>
+							<div className={'flex w-full flex-col items-baseline justify-between md:flex-row'}>
+								<dt className={'text-neutral-900/60'}>{'yvmkUSD-A Token'}</dt>
+								<Link
+									className={'cursor-alias text-xs hover:underline md:text-base'}
+									href={`${blockExplorer}/address/${MKUSD_YVAULT_ADDRESS}`}>
+									<dd className={'font-number'}>{toAddress(MKUSD_YVAULT_ADDRESS)}</dd>
+								</Link>
+							</div>
+							<div className={'flex w-full flex-col items-baseline justify-between md:flex-row'}>
+								<dt className={'text-neutral-900/60'}>{'yvmkUSD-A Staking Contract'}</dt>
+								<Link
+									className={'cursor-alias text-xs hover:underline md:text-base'}
+									href={`${blockExplorer}/address/${MKUSD_YVAULT_STAKING_ADDRESS}`}>
+									<dd className={'font-number'}>{toAddress(MKUSD_YVAULT_STAKING_ADDRESS)}</dd>
 								</Link>
 							</div>
 						</dl>

@@ -23,6 +23,9 @@ export const LP_YPRISMA_STAKING_ADDRESS = toAddress(`0x6806D62AAdF2Ee97cd4BCE46B
 export const DYFI_ADDRESS = toAddress('0x41252E8691e964f7DE35156B68493bAb6797a275');
 export const DYFI_STAKING_ADDRESS = toAddress(`0x93283184650f4d3B4253ABd00978176732118428`);
 
+export const MKUSD_YVAULT_ADDRESS = toAddress('0x04AeBe2e4301CdF5E9c57B01eBdfe4Ac4B48DD13');
+export const MKUSD_YVAULT_STAKING_ADDRESS = toAddress('0xE3EE395C9067dD15C492Ca950B101a7d6c85b5Fc');
+
 export type TAvailableFarm = {
 	tabIndex: number;
 	stakingContract: TAddress;
@@ -36,9 +39,9 @@ export type TAvailableFarm = {
 export const AVAILABLE_FARMS: TAvailableFarm[] = [
 	{
 		tabIndex: 1,
-		stakingContract: toAddress('0xE3EE395C9067dD15C492Ca950B101a7d6c85b5Fc'),
-		stakingToken: toAddress('0xe3668873D944E4A949DA05fc8bDE419eFF543882'),
-		rewardToken: toAddress('0x04AeBe2e4301CdF5E9c57B01eBdfe4Ac4B48DD13'),
+		stakingContract: MKUSD_YVAULT_STAKING_ADDRESS,
+		stakingToken: YPRISMA_ADDRESS,
+		rewardToken: MKUSD_YVAULT_ADDRESS,
 		stakingTokenName: 'yPrisma',
 		rewardTokenName: 'yvmkUSD-A',
 		slug: 'yprisma-yvmkusd'
