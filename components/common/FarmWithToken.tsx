@@ -53,6 +53,11 @@ function Details({
 		select: (data): TNormalizedBN => toNormalizedBN(data)
 	});
 
+	let tempRewardToken: `0x${string}` | null = null;
+	if (rewardToken === '0x04AeBe2e4301CdF5E9c57B01eBdfe4Ac4B48DD13') {
+		tempRewardToken = '0x4591dbff62656e7859afe5e45f6f47d3669fbb28' as `0x${string}`;
+	}
+
 	return (
 		<div className={'col-span-1 w-full items-center rounded-lg bg-neutral-100 pt-6 md:col-span-3'}>
 			<dl className={'flex flex-col gap-4 rounded-lg bg-neutral-200 p-4 md:p-6'}>
@@ -110,7 +115,15 @@ function Details({
 						<small
 							suppressHydrationWarning
 							className={'font-number block text-right text-xs text-neutral-900/60'}>
-							{`$ ${formatAmount(Number(earned?.normalized) * Number(prices?.[rewardToken]) || 0, 2, 2)}`}
+							{`$ ${formatAmount(
+								Number(earned?.normalized) *
+									Number(
+										prices?.[tempRewardToken as keyof typeof prices] ||
+											prices?.[rewardToken as keyof typeof prices]
+									) || 0,
+								2,
+								2
+							)}`}{' '}
 						</small>
 					</dd>
 				</div>
@@ -169,14 +182,16 @@ export function FarmWithToken({
 	const [amountToStake, set_amountToStake] = useState<TNormalizedBN | undefined>(undefined);
 	const [amountToWithdraw, set_amountToWithdraw] = useState<TNormalizedBN | undefined>(undefined);
 	const {yDaemonBaseUri} = useYDaemonBaseURI({chainID: 1});
-	
-	let tempRewardToken = null
-	if (rewardToken === "0x04AeBe2e4301CdF5E9c57B01eBdfe4Ac4B48DD13") {
-	  tempRewardToken = "0x4591dbff62656e7859afe5e45f6f47d3669fbb28"
+
+	let tempRewardToken: `0x${string}` | null = null;
+	if (rewardToken === '0x04AeBe2e4301CdF5E9c57B01eBdfe4Ac4B48DD13') {
+		tempRewardToken = '0x4591dbff62656e7859afe5e45f6f47d3669fbb28' as `0x${string}`;
 	}
 
 	const {data: prices} = useFetch<TYDaemonPrices>({
-		endpoint: `${yDaemonBaseUri}/prices/some/${stakingToken},${tempRewardToken ? tempRewardToken : rewardToken}?humanized=true`,
+		endpoint: `${yDaemonBaseUri}/prices/some/${stakingToken},${
+			tempRewardToken ? tempRewardToken : rewardToken
+		}?humanized=true`,
 		schema: yDaemonPricesSchema
 	});
 
@@ -388,7 +403,12 @@ export function FarmWithToken({
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(earned?.normalized || 0) * Number(prices?.[tempRewardToken ? tempRewardToken : rewardToken] || 0)
+									Number(earned?.normalized || 0) *
+										Number(
+											prices?.[tempRewardToken as keyof typeof prices] ||
+												prices?.[rewardToken as keyof typeof prices] ||
+												0
+										)
 								)}`}
 							</p>
 						</div>
