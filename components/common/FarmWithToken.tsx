@@ -493,7 +493,7 @@ export function FarmWithToken({
 
 			<Details
 				APR={APR}
-				rewardToken={tempRewardToken ? tempRewardToken : rewardToken}
+				rewardToken={rewardToken}
 				stakingToken={stakingToken}
 				stakingTokenName={stakingTokenName}
 				stakingContract={stakingContract}
