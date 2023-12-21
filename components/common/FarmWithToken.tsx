@@ -110,7 +110,7 @@ function Details({
 						<small
 							suppressHydrationWarning
 							className={'font-number block text-right text-xs text-neutral-900/60'}>
-							{`$ ${formatAmount(Number(earned?.normalized) * Number(prices?.[rewardToken]) || 0, 2, 2)}`}
+							{`$ ${formatAmount(Number(earned?.normalized) * prices?.[tempRewardToken as `0x${string}`] || prices?.[rewardToken as `0x${string}`] || 0, 2, 2)}`}
 						</small>
 					</dd>
 				</div>
@@ -147,18 +147,18 @@ type TFarmFactory = {
 	tab: string;
 	stakingContract: TAddress;
 	stakingToken: TAddress;
-	rewardToken: TAddress;
+	Token: TAddress;
 	stakingTokenName: string;
-	rewardTokenName: string;
+	TokenName: string;
 	slug: string;
 };
 export function FarmWithToken({
 	APR,
 	stakingContract,
 	stakingToken,
-	rewardToken,
+	Token,
 	stakingTokenName,
-	rewardTokenName
+	TokenName
 }: TFarmFactory): ReactElement {
 	const {provider, address, isActive} = useWeb3();
 	const [txStatusApprove, set_txStatusApprove] = useState(defaultTxStatus);
@@ -388,7 +388,9 @@ export function FarmWithToken({
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(earned?.normalized || 0) * Number(prices?.[tempRewardToken!] || prices?.[rewardToken] || 0)
+								  Number(earned?.normalized || 0) * Number(
+								    prices?.[tempRewardToken as `0x${string}`] || prices?.[rewardToken as `0x${string}`] || 0
+								  )
 								)}`}
 							</p>
 						</div>
