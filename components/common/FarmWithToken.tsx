@@ -170,7 +170,7 @@ export function FarmWithToken({
 	const [amountToWithdraw, set_amountToWithdraw] = useState<TNormalizedBN | undefined>(undefined);
 	const {yDaemonBaseUri} = useYDaemonBaseURI({chainID: 1});
 	
-	let tempRewardToken = null;
+	let tempRewardToken: string | null = null;
 	if (rewardToken === "0x04AeBe2e4301CdF5E9c57B01eBdfe4Ac4B48DD13") {
 	  tempRewardToken = "0x4591dbff62656e7859afe5e45f6f47d3669fbb28";
 	}
@@ -388,7 +388,7 @@ export function FarmWithToken({
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-									Number(earned?.normalized || 0) * Number(prices?.[tempRewardToken ? tempRewardToken : rewardToken] || 0)
+								  Number(earned?.normalized || 0) * Number(prices?.[tempRewardToken!] || prices?.[rewardToken] || 0)
 								)}`}
 							</p>
 						</div>
