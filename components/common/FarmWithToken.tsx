@@ -388,7 +388,7 @@ export function FarmWithToken({
 								suppressHydrationWarning
 								className={'text-neutral-400'}>
 								{`$${formatAmount(
-								  Number(earned?.normalized || 0) * Number(prices?.[tempRewardToken!] || prices?.[rewardToken] || 0)
+									Number(earned?.normalized || 0) * Number(prices?.[tempRewardToken!] || prices?.[rewardToken] || 0)
 								)}`}
 							</p>
 						</div>
