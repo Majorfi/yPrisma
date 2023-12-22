@@ -20,9 +20,10 @@ export type TUseAPRProps = {
 export function useAPRs(props: TUseAPRProps[]): [number[], {value: number; index: number}] {
 	const {yDaemonBaseUri} = useYDaemonBaseURI({chainID: 1});
 	const allStakingTokens = props.map((contract): TAddress => contract.stakingToken);
+	const allRewardTokens = props.map((contract): TAddress => contract.rewardToken);
 
 	const {data: prices} = useFetch<TYDaemonPrices>({
-		endpoint: `${yDaemonBaseUri}/prices/some/${allStakingTokens},${'0x4591dbff62656e7859afe5e45f6f47d3669fbb28'}?humanized=true`,
+		endpoint: `${yDaemonBaseUri}/prices/some/${allStakingTokens},${allRewardTokens}?humanized=true`,
 		schema: yDaemonPricesSchema
 	});
 
@@ -79,7 +80,7 @@ export function useAPRs(props: TUseAPRProps[]): [number[], {value: number; index
 			}
 
 			const tokenPrice = Number(prices?.[item.stakingToken]);
-			const rewardPrice = 1;
+			const rewardPrice = Number(prices?.[item.rewardToken]);
 			const perStakingTokenRate = Number(rewardRate.normalized) / Number(totalSupply.normalized);
 			const secondsPerYear = 31_556_952;
 			const ratePerYear = perStakingTokenRate * secondsPerYear;
