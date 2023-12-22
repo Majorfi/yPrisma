@@ -74,7 +74,7 @@ function Index(): ReactElement {
 								<div className={'mt-2 flex flex-col space-y-2 text-neutral-900/80'}>
 									<p>
 										{
-											"Deposit yPRISMA to this staking contract to collect yield from Yearn's vePRISMA position. This includes protocol fees and bribe yield from incenvtive voting."
+											"Deposit yPRISMA to this staking contract to collect yield from Yearn's vePRISMA position. This includes protocol fees and bribe yield from incentive voting."
 										}
 									</p>
 									<p>
