@@ -45,7 +45,9 @@ function Index(): ReactElement {
 										<p>
 											{'Learn more about what yPRISMA is and how it works over in our '}
 											<Link
-												href={'https://docs.yearn.fi/getting-started/products/yprisma/overview'}
+												href={
+													'https://docs.yearn.fi/getting-started/products/ylockers/yprisma/overview'
+												}
 												target={'_blank'}
 												rel={'noopener noreferrer'}
 												className={'underline'}>
