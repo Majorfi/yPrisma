@@ -104,7 +104,7 @@ function Index(): ReactElement {
 								(farm): ReactElement => (
 									<Link
 										key={farm.slug}
-										href={`/?tab=stake-${farm.slug}`}
+										href={`/expired?tab=stake-${farm.slug}`}
 										scroll={false}
 										replace
 										shallow>
