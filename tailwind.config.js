@@ -21,9 +21,6 @@ module.exports = {
 				aeonik: ['var(--font-aeonik)', 'Aeonik', ...defaultTheme.fontFamily.sans],
 				mono: ['Aeonik Mono', ...defaultTheme.fontFamily.mono]
 			},
-			width: {
-				inherit: 'inherit'
-			},
 			fontSize: {
 				xxs: ['10px', '16px'],
 				xs: ['12px', '16px'],
@@ -34,13 +31,20 @@ module.exports = {
 				xl: ['24px', '32px'],
 				'3xl': ['32px', '40px'],
 				'4xl': ['40px', '56px'],
+				'5xl': ['56px', '64px'],
+				'6xl': ['72px', '80px'],
 				'7xl': ['80px', '96px'],
 				'8xl': ['88px', '106px']
+			},
+			width: {
+				inherit: 'inherit',
+				main: '1115px'
 			},
 			maxWidth: {
 				xl: '552px',
 				'4xl': '904px',
-				'6xl': '1200px'
+				'6xl': '1200px',
+				main: '1115px'
 			},
 			gridTemplateColumns: {
 				20: 'repeat(20, minmax(0, 1fr))',

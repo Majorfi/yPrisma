@@ -6,8 +6,7 @@ import {ModalMobileMenu} from '@yearn-finance/web-lib/components/ModalMobileMenu
 import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
 import {IconWallet} from '@yearn-finance/web-lib/icons/IconWallet';
 import {truncateHex} from '@yearn-finance/web-lib/utils/address';
-
-import {LogoPopover} from './HeaderPopover';
+import {cl} from '@yearn-finance/web-lib/utils/cl';
 
 import type {ReactElement} from 'react';
 
@@ -26,6 +25,12 @@ function Navbar({nav, currentPathName}: TNavbar): ReactElement {
 						<p className={`yearn--header-nav-item ${currentPathName === option.path ? 'active' : ''}`}>
 							{option?.label || 'Unknown'}
 						</p>
+						<div
+							className={cl(
+								'mt-1.5 h-[2px] w-full rounded-full',
+								currentPathName === option.path ? 'bg-neutral-900' : 'bg-transparent'
+							)}
+						/>
 					</Link>
 				)
 			)}
@@ -86,9 +91,10 @@ function WalletSelector(): ReactElement {
 }
 
 const nav: TMenu[] = [
-	{path: '/', label: 'Farming'},
+	{path: '/', label: 'Earn'},
+	{path: '/about', label: 'About'},
 	{path: '/airdrop', label: 'Prisma Airdrop'},
-	{path: '/about', label: 'About'}
+	{path: '/farming', label: 'Expired farms'}
 ];
 
 function AppHeader(): ReactElement {
@@ -98,14 +104,15 @@ function AppHeader(): ReactElement {
 	return (
 		<div
 			id={'head'}
-			className={'fixed inset-x-0 top-0 z-50 w-full bg-neutral-0/95'}>
-			<div className={'mx-auto max-w-5xl'}>
+			className={'fixed inset-x-0 top-0 z-50 w-full'}
+			style={{background: 'linear-gradient(180deg, rgba(0, 4, 29, 0.67) 0%, rgba(0, 0, 0, 0) 100%)'}}>
+			<div className={'mx-auto max-w-6xl'}>
 				<header className={'yearn--header'}>
 					<Navbar
 						currentPathName={pathname || ''}
 						nav={nav}
 					/>
-					<div className={'flex w-1/3 md:hidden'}>
+					<div className={'flex w-1/2 md:hidden'}>
 						<button onClick={(): void => set_isMenuOpen(!isMenuOpen)}>
 							<span className={'sr-only'}>{'Open menu'}</span>
 							<svg
@@ -142,11 +149,12 @@ function AppHeader(): ReactElement {
 							</svg>
 						</button>
 					</div>
-					<div className={'flex w-1/3 justify-center'}>
-						<LogoPopover />
-					</div>
-					<div className={'flex w-1/3 items-center justify-end'}>
-						<WalletSelector />
+					<div className={'flex w-1/2 items-center justify-end'}>
+						{pathname === '/' ? (
+							<button className={'rounded-lg border border-[#00A3FF] px-5 py-2'}>{'Launch App'}</button>
+						) : (
+							<WalletSelector />
+						)}
 					</div>
 				</header>
 			</div>

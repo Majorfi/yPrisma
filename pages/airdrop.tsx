@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import {useSearchParams} from 'next/navigation';
 import {StakeBanner} from 'components/common/StakeBanner';
@@ -71,15 +70,6 @@ function Airdrop(): ReactElement {
 						<div className={'mb-4 hidden'}>
 							<StakeBanner APR={biggestAPR} />
 						</div>
-					</div>
-					<div className={'relative col-span-12 hidden items-start justify-center md:col-span-4 md:flex'}>
-						<Image
-							priority
-							alt={''}
-							src={'./prisma.svg'}
-							width={300}
-							height={300}
-						/>
 					</div>
 				</section>
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import {StakeBanner} from 'components/common/StakeBanner';
 
@@ -126,16 +125,6 @@ export function About({APR}: {APR: {value: number; index: number}}): ReactElemen
 						<AboutHeading />
 					</div>
 					<AboutCopy APR={APR} />
-				</div>
-
-				<div className={'relative col-span-12 hidden items-start justify-center md:col-span-4 md:flex'}>
-					<Image
-						priority
-						alt={''}
-						src={'./prisma.svg'}
-						width={300}
-						height={300}
-					/>
 				</div>
 			</section>
 		</>
