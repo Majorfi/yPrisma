@@ -13,7 +13,7 @@ function AppWrapper(props: AppProps): ReactElement {
 		<React.Fragment>
 			<Meta />
 			<Header />
-			<div className={'static inset-0 -top-16 h-full w-full'}>
+			<div className={'fixed inset-0 -top-16 left-10 h-full w-full'}>
 				<Rainbow className={'w-full'} />
 			</div>
 

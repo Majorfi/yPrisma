@@ -15,7 +15,7 @@ type TNavbar = {nav: TMenu[]; currentPathName: string};
 
 function Navbar({nav, currentPathName}: TNavbar): ReactElement {
 	return (
-		<nav className={'yearn--nav'}>
+		<nav className={'hidden w-1/2 flex-row items-center space-x-3 md:flex md:space-x-6'}>
 			{nav.map(
 				(option): ReactElement => (
 					<Link
@@ -149,7 +149,7 @@ function AppHeader(): ReactElement {
 							</svg>
 						</button>
 					</div>
-					<div className={'flex w-1/2 items-center justify-end'}>
+					<div className={'flex w-1/2 items-center justify-end pr-32'}>
 						{pathname === '/' ? (
 							<button className={'rounded-lg border border-[#00A3FF] px-5 py-2'}>{'Launch App'}</button>
 						) : (
