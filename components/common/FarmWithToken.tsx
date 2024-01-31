@@ -485,6 +485,14 @@ export function FarmWithToken({
 				</div>
 			</div>
 
+			<div className={'text-sm text-neutral-900/60'}>
+				<a href={'https://yearn.fi/v3/1/0x04AeBe2e4301CdF5E9c57B01eBdfe4Ac4B48DD13'}>
+					{`You can manage your position in the ${rewardTokenName} vault `}
+					<span className={'text-neutral-900/80 underline'}>{' here'}</span>
+					{'.'}
+				</a>
+			</div>
+
 			<Details
 				APR={APR}
 				rewardToken={rewardToken}
