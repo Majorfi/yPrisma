@@ -45,3 +45,13 @@
 		rgba(72, 44, 216, 1) 100%
 	);
 }
+
+.scrollbar-show::-webkit-scrollbar {
+	-webkit-appearance: none;
+	width: 6px;
+}
+.scrollbar-show::-webkit-scrollbar-thumb {
+	border-radius: 0px;
+	background-color: #111b53;
+	-webkit-box-shadow: 0 0 1px #111b53;
+}

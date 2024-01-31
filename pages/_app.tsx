@@ -1,11 +1,14 @@
 import React from 'react';
+import {Toaster} from 'react-hot-toast';
 import localFont from 'next/font/local';
 import AppWrapper from 'components/common/AppWrapper';
-import {mainnet, optimism} from 'wagmi/chains';
-import {Analytics} from '@vercel/analytics/react';
-import {WithYearn} from '@yearn-finance/web-lib/contexts/WithYearn';
-import {cl} from '@yearn-finance/web-lib/utils/cl';
-import {localhost} from '@yearn-finance/web-lib/utils/wagmi/networks';
+import IconCheck from 'components/icons/IconCheck';
+import IconCircleCross from 'components/icons/IconCircleCross';
+import {mainnet} from 'viem/chains';
+import {WalletContextApp} from '@builtbymom/web3/contexts/useWallet';
+import {WithMom} from '@builtbymom/web3/contexts/WithMom';
+import {cl} from '@builtbymom/web3/utils';
+import {localhost} from '@builtbymom/web3/utils/wagmi';
 
 import type {AppProps} from 'next/app';
 import type {ReactElement} from 'react';
@@ -44,19 +47,36 @@ function MyApp(props: AppProps): ReactElement {
 					font-family: ${aeonik.style.fontFamily};
 				}
 			`}</style>
-			<WithYearn
-				supportedChains={[mainnet, optimism, localhost]}
-				options={{
-					baseSettings: {
-						yDaemonBaseURI: process.env.YDAEMON_BASE_URI as string
+			<WithMom
+				supportedChains={[mainnet, localhost]}
+				tokenLists={['https://raw.githubusercontent.com/SmolDapp/tokenLists/main/lists/yearn.json']}>
+				<WalletContextApp>
+					<main className={cl('flex flex-col h-screen', aeonik.className)}>
+						<AppWrapper {...props} />
+					</main>
+				</WalletContextApp>
+			</WithMom>
+			<Toaster
+				toastOptions={{
+					duration: 5000,
+					className: 'toast',
+					success: {
+						icon: <IconCheck className={'size-5 min-h-5 min-w-5 -mr-1 pt-1.5'} />,
+						iconTheme: {
+							primary: 'black',
+							secondary: '#F1EBD9'
+						}
 					},
-					ui: {shouldUseThemes: false}
-				}}>
-				<main className={cl('flex flex-col h-screen', aeonik.className)}>
-					<AppWrapper {...props} />
-				</main>
-			</WithYearn>
-			<Analytics />
+					error: {
+						icon: <IconCircleCross className={'size-5 min-h-5 min-w-5 -mr-1 pt-1.5'} />,
+						iconTheme: {
+							primary: 'black',
+							secondary: '#F1EBD9'
+						}
+					}
+				}}
+				position={'top-left'}
+			/>
 		</>
 	);
 }

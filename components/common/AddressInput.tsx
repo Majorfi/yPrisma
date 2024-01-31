@@ -3,13 +3,12 @@ import IconCheck from 'components/icons/IconCheck';
 import IconCircleCross from 'components/icons/IconCircleCross';
 import {checkENSValidity} from 'utils/tools.ens';
 import {checkLensValidity} from 'utils/tools.lens';
+import {isZeroAddress, toAddress} from '@builtbymom/web3/utils';
 import {IconLoader} from '@yearn-finance/web-lib/icons/IconLoader';
-import {isZeroAddress, toAddress} from '@yearn-finance/web-lib/utils/address';
 import {ZERO_ADDRESS} from '@yearn-finance/web-lib/utils/constants';
-import {performBatchedUpdates} from '@yearn-finance/web-lib/utils/performBatchedUpdates';
 
 import type {ReactElement} from 'react';
-import type {TAddress} from '@yearn-finance/web-lib/types';
+import type {TAddress} from '@builtbymom/web3/types';
 
 export type TInputAddressLike = {
 	address: TAddress | undefined;
@@ -53,29 +52,21 @@ function AddressInput({
 			currentLabel.current = label;
 
 			if (label.endsWith('.eth') && label.length > 4) {
-				performBatchedUpdates((): void => {
-					onChangeValue({address: undefined, label, isValid: 'undetermined'});
-					set_isLoadingValidish(true);
-				});
+				onChangeValue({address: undefined, label, isValid: 'undetermined'});
+				set_isLoadingValidish(true);
 				const [address, isValid] = await checkENSValidity(label);
-				performBatchedUpdates((): void => {
-					if (currentLabel.current === label) {
-						onChangeValue({address, label, isValid});
-					}
-					set_isLoadingValidish(false);
-				});
+				if (currentLabel.current === label) {
+					onChangeValue({address, label, isValid});
+				}
+				set_isLoadingValidish(false);
 			} else if (label.endsWith('.lens') && label.length > 5) {
-				performBatchedUpdates((): void => {
-					onChangeValue({address: undefined, label, isValid: 'undetermined'});
-					set_isLoadingValidish(true);
-				});
+				onChangeValue({address: undefined, label, isValid: 'undetermined'});
+				set_isLoadingValidish(true);
 				const [address, isValid] = await checkLensValidity(label);
-				performBatchedUpdates((): void => {
-					if (currentLabel.current === label) {
-						onChangeValue({address, label, isValid});
-					}
-					set_isLoadingValidish(false);
-				});
+				if (currentLabel.current === label) {
+					onChangeValue({address, label, isValid});
+				}
+				set_isLoadingValidish(false);
 			} else if (!isZeroAddress(toAddress(label))) {
 				onChangeValue({address: toAddress(label), label, isValid: true});
 			} else {

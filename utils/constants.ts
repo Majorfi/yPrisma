@@ -1,6 +1,6 @@
-import {toAddress} from '@yearn-finance/web-lib/utils/address';
+import {toAddress} from '@builtbymom/web3/utils';
 
-import type {TAddress} from '@yearn-finance/web-lib/types';
+import type {TAddress} from '@builtbymom/web3/types';
 
 export const DEFAULT_CHAIN_ID = 1;
 export const YEARN_VOTER_ADDRESS = toAddress('0x90be6DFEa8C80c184C442a36e17cB2439AAE25a7');
@@ -9,6 +9,7 @@ export const EARLY_AIRDROP_ADDRESS = toAddress('0x2C533357664d8750e5F851f39B2534
 export const PRISMA_ADDRESS = toAddress('0xdA47862a83dac0c112BA89c6abC2159b95afd71C');
 export const YPRISMA_LEGACY_ADDRESS = toAddress('0xfd37356c1a62288b32Fa58188c77Ab0D694a0f4E');
 export const LEGACY_MINTER_ADDRESS = toAddress(`0x04EcFdb67b00Fd70007570342887390ebf934C28`);
+export const YPRISMA_CURVE_POOL_ADDRESS = toAddress('0x69833361991ed76f9e8dbbcdf9ea1520febfb4a7');
 
 export const YPRISMA_ADDRESS = toAddress('0xe3668873d944e4a949da05fc8bde419eff543882');
 export const YPRISMA_STAKING_ADDRESS = toAddress('0x774a55C3Eeb79929fD445Ae97191228Ab39c4d0f');

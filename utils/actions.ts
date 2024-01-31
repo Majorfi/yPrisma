@@ -9,9 +9,9 @@ import {LEGACY_MINTER_ABI} from './abi/legacyMinter.abi';
 import {STAKING_ABI} from './abi/stakingContract.abi';
 
 import type {Hex} from 'viem';
-import type {TAddress} from '@yearn-finance/web-lib/types';
 import type {TWriteTransaction} from '@yearn-finance/web-lib/utils/wagmi/provider';
-import type {TTxResponse} from '@yearn-finance/web-lib/utils/web3/transaction';
+import type {TAddress} from '@builtbymom/web3/types';
+import type {TTxResponse} from '@builtbymom/web3/utils/wagmi';
 
 //Because USDT do not return a boolean on approve, we need to use this ABI
 const ALTERNATE_ERC20_APPROVE_ABI = [

@@ -1,8 +1,8 @@
+import {cl} from '@builtbymom/web3/utils';
 import {Renderable} from '@yearn-finance/web-lib/components/Renderable';
-import {cl} from '@yearn-finance/web-lib/utils/cl';
 
 import type {ReactElement} from 'react';
-import type {TNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
+import type {TNormalizedBN} from '@builtbymom/web3/types';
 
 type TAmountInputProps = {
 	amount: TNormalizedBN | undefined;
@@ -41,7 +41,7 @@ export function AmountInput({
 						`h-10 w-full rounded-lg p-2 font-mono text-base font-normal outline-none`,
 						maxAmount && !disabled ? 'pr-12' : '',
 						error ? 'border border-solid border-[#EA5204] focus:border-[#EA5204]' : 'border-0 border-none',
-						disabled ? 'bg-neutral-300 text-neutral-600' : 'bg-neutral-300'
+						disabled ? 'bg-[#111B53] text-neutral-600' : 'bg-[#111B53]'
 					)}
 					type={'text'}
 					autoComplete={'off'}

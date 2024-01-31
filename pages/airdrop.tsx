@@ -7,7 +7,7 @@ import {ViewClaimAirdrop} from 'components/views/ViewClaimAirdrop';
 import {ViewMigrationModal} from 'components/views/ViewMigrationModal';
 import {useAPRs} from 'hooks/useAPRs';
 import {AVAILABLE_FARMS} from 'utils/constants';
-import {cl} from '@yearn-finance/web-lib/utils/cl';
+import {cl} from '@builtbymom/web3/utils';
 
 import type {TUseAPRProps} from 'hooks/useAPRs';
 import type {ReactElement} from 'react';

@@ -4,10 +4,10 @@ import {claimEarlyAirdrop} from 'utils/actions';
 import {DEFAULT_CHAIN_ID, EARLY_AIRDROP_ADDRESS} from 'utils/constants';
 import {type Hex, hexToNumber} from 'viem';
 import {useContractRead} from 'wagmi';
+import {useWeb3} from '@builtbymom/web3/contexts/useWeb3';
+import {toBigInt} from '@builtbymom/web3/utils';
+import {defaultTxStatus} from '@builtbymom/web3/utils/wagmi';
 import {Button} from '@yearn-finance/web-lib/components/Button';
-import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
-import {toBigInt} from '@yearn-finance/web-lib/utils/format.bigNumber';
-import {defaultTxStatus} from '@yearn-finance/web-lib/utils/web3/transaction';
 
 import {Counter} from './common/AmountCounter';
 

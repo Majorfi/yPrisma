@@ -1,8 +1,7 @@
 import {LogoYearn} from 'components/icons/LogoYearn';
 import {YPRISMA_ADDRESS} from 'utils/constants';
+import {ImageWithFallback} from '@yearn-finance/web-lib/components/ImageWithFallback';
 import {YCRV_TOKEN_ADDRESS} from '@yearn-finance/web-lib/utils/constants';
-
-import {ImageWithFallback} from './ImageWithFallback';
 
 export const APPS = {
 	Vaults: {

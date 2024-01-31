@@ -6,9 +6,8 @@ import {defaultInputAddressLike} from 'components/common/AddressInput';
 import {SuccessModal} from 'components/common/SuccessClaimAIirdropModal';
 import {type Hex} from 'viem';
 import axios from 'axios';
+import {cl, toAddress} from '@builtbymom/web3/utils';
 import {useMountEffect} from '@react-hookz/web';
-import {toAddress} from '@yearn-finance/web-lib/utils/address';
-import {cl} from '@yearn-finance/web-lib/utils/cl';
 
 import type {TInputAddressLike} from 'components/common/AddressInput';
 import type {ReactElement} from 'react';

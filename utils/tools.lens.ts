@@ -1,8 +1,8 @@
 import {isAddress} from 'viem';
-import {toAddress} from '@yearn-finance/web-lib/utils/address';
+import {toAddress} from '@builtbymom/web3/utils';
 import {lensProtocolFetcher} from '@yearn-finance/web-lib/utils/fetchers';
 
-import type {TAddress} from '@yearn-finance/web-lib/types';
+import type {TAddress} from '@builtbymom/web3/types';
 
 type THandleFromAddress = {defaultProfile: {handle: string}};
 async function getHandleFromAddress(address: TAddress): Promise<string> {

@@ -10,7 +10,7 @@ import {
 	YPRISMA_LEGACY_ADDRESS,
 	YPRISMA_STAKING_ADDRESS
 } from 'utils/constants';
-import {toAddress} from '@yearn-finance/web-lib/utils/address';
+import {toAddress} from '@builtbymom/web3/utils';
 import {getNetwork} from '@yearn-finance/web-lib/utils/wagmi/utils';
 
 import type {ReactElement} from 'react';

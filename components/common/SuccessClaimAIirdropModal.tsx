@@ -1,10 +1,10 @@
 import {Fragment, useState} from 'react';
 import Confetti from 'react-dom-confetti';
 import Link from 'next/link';
+import {cl} from '@builtbymom/web3/utils';
 import {Dialog, Transition} from '@headlessui/react';
 import {useUpdateEffect} from '@react-hookz/web';
 import {Button} from '@yearn-finance/web-lib/components/Button';
-import {cl} from '@yearn-finance/web-lib/utils/cl';
 
 import type {ReactElement} from 'react';
 

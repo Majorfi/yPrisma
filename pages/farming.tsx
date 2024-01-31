@@ -5,8 +5,8 @@ import {AboutFarmHeading} from 'components/views/ViewAbout';
 import {ViewFarm} from 'components/views/ViewFarm';
 import {ViewMigrationModal} from 'components/views/ViewMigrationModal';
 import {AVAILABLE_FARMS} from 'utils/constants';
+import {cl} from '@builtbymom/web3/utils';
 import {Button} from '@yearn-finance/web-lib/components/Button';
-import {cl} from '@yearn-finance/web-lib/utils/cl';
 
 import type {ReactElement} from 'react';
 

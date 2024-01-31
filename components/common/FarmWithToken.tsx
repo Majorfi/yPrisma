@@ -7,18 +7,14 @@ import {exit} from 'utils/actions';
 import {DEFAULT_CHAIN_ID} from 'utils/constants';
 import {yDaemonPricesSchema} from 'utils/yDaemonPricesSchema';
 import {erc20ABI, useContractRead} from 'wagmi';
+import {useWeb3} from '@builtbymom/web3/contexts/useWeb3';
+import {formatAmount, handleInputChangeValue, toAddress, toBigInt, toNormalizedBN} from '@builtbymom/web3/utils';
+import {defaultTxStatus} from '@builtbymom/web3/utils/wagmi';
 import {Button} from '@yearn-finance/web-lib/components/Button';
-import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
-import {toAddress} from '@yearn-finance/web-lib/utils/address';
-import {toBigInt, toNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
-import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
-import {handleInputChangeEventValue} from '@yearn-finance/web-lib/utils/handlers/handleInputChangeEventValue';
-import {defaultTxStatus} from '@yearn-finance/web-lib/utils/web3/transaction';
 
 import type {ReactElement} from 'react';
-import type {TAddress} from '@yearn-finance/web-lib/types';
-import type {TNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
 import type {TYDaemonPrices} from '@yearn-finance/web-lib/utils/schemas/yDaemonPricesSchema';
+import type {TAddress, TNormalizedBN} from '@builtbymom/web3/types';
 
 type TFarmDetails = {
 	stakingContract: TAddress;
@@ -177,7 +173,7 @@ export function FarmWithToken({
 				<AmountInput
 					amount={amountToWithdraw}
 					maxAmount={staked}
-					onAmountChange={(value): void => set_amountToWithdraw(handleInputChangeEventValue(value, 18))}
+					onAmountChange={(value): void => set_amountToWithdraw(handleInputChangeValue(value, 18))}
 					onLegendClick={(): void => set_amountToWithdraw(staked)}
 					onMaxClick={(): void => set_amountToWithdraw(staked)}
 					legend={
