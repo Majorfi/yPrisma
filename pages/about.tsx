@@ -96,7 +96,7 @@ function Index(): ReactElement {
 								</Link>
 							</div>
 							<div className={'flex w-full flex-col items-baseline justify-between md:flex-row'}>
-								<dt className={'text-neutral-900/60'}>{'yPrisma Staking Contract'}</dt>
+								<dt className={'text-neutral-900/60'}>{'yPrisma Staking Contract (deprecated)'}</dt>
 								<Link
 									className={'cursor-alias text-xs hover:underline md:text-base'}
 									href={`${blockExplorer}/address/${YPRISMA_STAKING_ADDRESS}`}>
