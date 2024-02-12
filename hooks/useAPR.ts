@@ -3,13 +3,12 @@ import {STAKING_ABI} from 'utils/abi/stakingContract.abi';
 import {DEFAULT_CHAIN_ID} from 'utils/constants';
 import {yDaemonPricesSchema} from 'utils/yDaemonPricesSchema';
 import {useContractReads} from 'wagmi';
-import {toBigInt, toNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
+import {useFetch} from '@builtbymom/web3/hooks/useFetch';
+import {toBigInt, toNormalizedBN} from '@builtbymom/web3/utils';
+import {useYDaemonBaseURI} from '@yearn-finance/web-lib/hooks/useYDaemonBaseURI';
 
-import {useFetch} from './useFetch';
-import {useYDaemonBaseURI} from './useYDaemonBaseURI';
-
-import type {TAddress} from '@yearn-finance/web-lib/types';
 import type {TYDaemonPrices} from '@yearn-finance/web-lib/utils/schemas/yDaemonPricesSchema';
+import type {TAddress} from '@builtbymom/web3/types';
 
 type TUseAPRProps = {
 	stakingContract: TAddress;

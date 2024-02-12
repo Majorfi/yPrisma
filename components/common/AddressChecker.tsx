@@ -1,10 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
 import AddressInput from 'components/common/AddressInput';
+import {useWeb3} from '@builtbymom/web3/contexts/useWeb3';
+import {toAddress} from '@builtbymom/web3/utils';
 import {useUpdateEffect} from '@react-hookz/web';
 import {Button} from '@yearn-finance/web-lib/components/Button';
-import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
-import {toAddress} from '@yearn-finance/web-lib/utils/address';
 
 import type {TInputAddressLike} from 'components/common/AddressInput';
 import type {Dispatch, ReactElement, SetStateAction} from 'react';

@@ -8,7 +8,7 @@ import {ViewClaimAirdrop} from 'components/views/ViewClaimAirdrop';
 import {ViewMigrationModal} from 'components/views/ViewMigrationModal';
 import {useAPRs} from 'hooks/useAPRs';
 import {AVAILABLE_FARMS} from 'utils/constants';
-import {cl} from '@yearn-finance/web-lib/utils/cl';
+import {cl} from '@builtbymom/web3/utils';
 
 import type {TUseAPRProps} from 'hooks/useAPRs';
 import type {ReactElement} from 'react';
@@ -36,7 +36,7 @@ function Airdrop(): ReactElement {
 	}, [pathname]);
 
 	return (
-		<div className={'relative mx-auto mb-0 flex w-full flex-col bg-neutral-0 pt-14'}>
+		<div className={'bg-neutral-0 relative mx-auto mb-0 flex w-full flex-col pt-14'}>
 			<div className={'relative mx-auto mt-6 w-screen max-w-6xl pb-40 '}>
 				<section className={'grid grid-cols-12 gap-0 md:pt-12'}>
 					<div className={'col-span-12 md:col-span-8 md:mb-0 md:pr-20'}>

@@ -12,7 +12,7 @@ import {
 	YPRISMA_LEGACY_ADDRESS,
 	YPRISMA_STAKING_ADDRESS
 } from 'utils/constants';
-import {toAddress} from '@yearn-finance/web-lib/utils/address';
+import {toAddress} from '@builtbymom/web3/utils';
 import {getNetwork} from '@yearn-finance/web-lib/utils/wagmi/utils';
 
 import type {ReactElement} from 'react';
@@ -22,7 +22,7 @@ function Index(): ReactElement {
 
 	return (
 		<div>
-			<div className={'relative mx-auto mb-0 flex w-full flex-col bg-neutral-0 pt-14'}>
+			<div className={'bg-neutral-0 relative mx-auto mb-0 flex w-full flex-col pt-14'}>
 				<div className={'relative mx-auto mt-6 w-screen max-w-6xl pb-40'}>
 					<section className={'grid-cols-12 gap-0 md:grid md:pt-12'}>
 						<div className={'col-span-12 md:col-span-8 md:mb-0 md:pr-20'}>

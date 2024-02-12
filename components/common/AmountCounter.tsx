@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {motion, useSpring, useTransform} from 'framer-motion';
-import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
+import {formatAmount} from '@builtbymom/web3/utils';
 
 import type {ReactElement} from 'react';
 

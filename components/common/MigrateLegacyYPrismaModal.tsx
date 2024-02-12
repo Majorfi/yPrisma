@@ -2,18 +2,16 @@ import {Fragment, useCallback, useState} from 'react';
 import {approveERC20, migrateOGYPrisma} from 'utils/actions';
 import {DEFAULT_CHAIN_ID, LEGACY_MINTER_ADDRESS, YPRISMA_LEGACY_ADDRESS} from 'utils/constants';
 import {erc20ABI, useContractRead} from 'wagmi';
+import {useWeb3} from '@builtbymom/web3/contexts/useWeb3';
+import {cl, toAddress, toBigInt, toNormalizedBN} from '@builtbymom/web3/utils';
+import {defaultTxStatus} from '@builtbymom/web3/utils/wagmi';
 import {Dialog, Transition} from '@headlessui/react';
 import {Button} from '@yearn-finance/web-lib/components/Button';
-import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
-import {toAddress} from '@yearn-finance/web-lib/utils/address';
-import {cl} from '@yearn-finance/web-lib/utils/cl';
-import {toBigInt, toNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
-import {defaultTxStatus} from '@yearn-finance/web-lib/utils/web3/transaction';
 
 import {Counter} from './AmountCounter';
 
 import type {ReactElement} from 'react';
-import type {TNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
+import type {TNormalizedBN} from '@builtbymom/web3/types';
 
 function ModalContent({
 	balance,
@@ -32,7 +30,7 @@ function ModalContent({
 		chainId: DEFAULT_CHAIN_ID,
 		functionName: 'allowance',
 		args: [toAddress(address), LEGACY_MINTER_ADDRESS],
-		select: (data): TNormalizedBN => toNormalizedBN(data)
+		select: (data): TNormalizedBN => toNormalizedBN(data, 18)
 	});
 
 	const onApproveYPrisma = useCallback(async (): Promise<void> => {
@@ -141,7 +139,7 @@ function MigrateModal(props: {
 					leave={'ease-in duration-200'}
 					leaveFrom={'opacity-100'}
 					leaveTo={'opacity-0'}>
-					<div className={'fixed inset-0 bg-neutral-0/75 backdrop-blur-sm transition-opacity'} />
+					<div className={'bg-neutral-0/75 fixed inset-0 backdrop-blur-sm transition-opacity'} />
 				</Transition.Child>
 
 				<div className={'fixed inset-0 z-[1001] w-screen overflow-y-auto'}>

@@ -2,13 +2,11 @@ import React, {Fragment, useState} from 'react';
 import {MigrateModal} from 'components/common/MigrateLegacyYPrismaModal';
 import {DEFAULT_CHAIN_ID, YPRISMA_LEGACY_ADDRESS} from 'utils/constants';
 import {erc20ABI, useContractRead} from 'wagmi';
-import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
-import {toAddress} from '@yearn-finance/web-lib/utils/address';
-import {cl} from '@yearn-finance/web-lib/utils/cl';
-import {toBigInt, toNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
+import {useWeb3} from '@builtbymom/web3/contexts/useWeb3';
+import {cl, toAddress, toBigInt, toNormalizedBN} from '@builtbymom/web3/utils';
 
 import type {ReactElement} from 'react';
-import type {TNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
+import type {TNormalizedBN} from '@builtbymom/web3/types';
 
 export function ViewMigrationModal(): ReactElement {
 	const {address} = useWeb3();
@@ -20,7 +18,7 @@ export function ViewMigrationModal(): ReactElement {
 		chainId: DEFAULT_CHAIN_ID,
 		functionName: 'balanceOf',
 		args: [toAddress(address)],
-		select: (data): TNormalizedBN => toNormalizedBN(data)
+		select: (data): TNormalizedBN => toNormalizedBN(data, 18)
 	});
 
 	if (toBigInt(legacyBalance?.raw) === 0n) {

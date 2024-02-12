@@ -1,10 +1,10 @@
 import {Fragment, useState} from 'react';
 import Confetti from 'react-dom-confetti';
 import Link from 'next/link';
+import {cl} from '@builtbymom/web3/utils';
 import {Dialog, Transition} from '@headlessui/react';
 import {useUpdateEffect} from '@react-hookz/web';
 import {Button} from '@yearn-finance/web-lib/components/Button';
-import {cl} from '@yearn-finance/web-lib/utils/cl';
 
 import type {ReactElement} from 'react';
 
@@ -35,7 +35,7 @@ function SuccessModal({isOpen, set_isOpen}: {isOpen: boolean; set_isOpen: (isOpe
 					leave={'ease-in duration-200'}
 					leaveFrom={'opacity-100'}
 					leaveTo={'opacity-0'}>
-					<div className={'fixed inset-0 bg-neutral-0/75 backdrop-blur-sm transition-opacity'} />
+					<div className={'bg-neutral-0/75 fixed inset-0 backdrop-blur-sm transition-opacity'} />
 				</Transition.Child>
 
 				<div className={'fixed inset-0 z-[1001] flex h-screen w-screen items-center justify-center'}>

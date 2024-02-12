@@ -1,6 +1,6 @@
-import {toAddress} from '@yearn-finance/web-lib/utils/address';
+import {toAddress} from '@builtbymom/web3/utils';
 
-import type {TAddress} from '@yearn-finance/web-lib/types';
+import type {TAddress} from '@builtbymom/web3/types';
 
 export const DEFAULT_CHAIN_ID = 1;
 export const YEARN_VOTER_ADDRESS = toAddress('0x90be6DFEa8C80c184C442a36e17cB2439AAE25a7');

@@ -1,25 +1,21 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {AmountInput} from 'components/common/AmountInput';
-import {useFetch} from 'hooks/useFetch';
-import {useYDaemonBaseURI} from 'hooks/useYDaemonBaseURI';
 import {STAKING_ABI} from 'utils/abi/stakingContract.abi';
 import {approveERC20, claimRewards, exit, stake, unstakeSome} from 'utils/actions';
 import {DEFAULT_CHAIN_ID} from 'utils/constants';
 import {yDaemonPricesSchema} from 'utils/yDaemonPricesSchema';
 import {erc20ABI, useContractRead} from 'wagmi';
+import {useWeb3} from '@builtbymom/web3/contexts/useWeb3';
+import {useFetch} from '@builtbymom/web3/hooks/useFetch';
+import {formatAmount, handleInputChangeValue, toAddress, toBigInt, toNormalizedBN} from '@builtbymom/web3/utils';
+import {defaultTxStatus} from '@builtbymom/web3/utils/wagmi';
 import {Button} from '@yearn-finance/web-lib/components/Button';
-import {useWeb3} from '@yearn-finance/web-lib/contexts/useWeb3';
-import {toAddress} from '@yearn-finance/web-lib/utils/address';
+import {useYDaemonBaseURI} from '@yearn-finance/web-lib/hooks/useYDaemonBaseURI';
 import {MAX_UINT_256} from '@yearn-finance/web-lib/utils/constants';
-import {toBigInt, toNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
-import {formatAmount} from '@yearn-finance/web-lib/utils/format.number';
-import {handleInputChangeEventValue} from '@yearn-finance/web-lib/utils/handlers/handleInputChangeEventValue';
-import {defaultTxStatus} from '@yearn-finance/web-lib/utils/web3/transaction';
 
 import type {ReactElement} from 'react';
-import type {TAddress} from '@yearn-finance/web-lib/types';
-import type {TNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
 import type {TYDaemonPrices} from '@yearn-finance/web-lib/utils/schemas/yDaemonPricesSchema';
+import type {TAddress, TNormalizedBN} from '@builtbymom/web3/types';
 
 type TFarmDetails = {
 	APR: number;
@@ -50,7 +46,7 @@ function Details({
 		abi: erc20ABI,
 		chainId: DEFAULT_CHAIN_ID,
 		functionName: 'totalSupply',
-		select: (data): TNormalizedBN => toNormalizedBN(data)
+		select: (data): TNormalizedBN => toNormalizedBN(data, 18)
 	});
 
 	return (
@@ -181,7 +177,7 @@ export function FarmWithToken({
 		functionName: 'balanceOf',
 		watch: true,
 		args: [toAddress(address)],
-		select: (data): TNormalizedBN => toNormalizedBN(data)
+		select: (data): TNormalizedBN => toNormalizedBN(data, 18)
 	});
 
 	const {data: approvedAmount, refetch: refetchAllowance} = useContractRead({
@@ -190,7 +186,7 @@ export function FarmWithToken({
 		chainId: DEFAULT_CHAIN_ID,
 		functionName: 'allowance',
 		args: [toAddress(address), stakingContract],
-		select: (data): TNormalizedBN => toNormalizedBN(data)
+		select: (data): TNormalizedBN => toNormalizedBN(data, 18)
 	});
 
 	const {data: staked, refetch: refetchStacked} = useContractRead({
@@ -199,7 +195,7 @@ export function FarmWithToken({
 		chainId: DEFAULT_CHAIN_ID,
 		functionName: 'balanceOf',
 		args: [toAddress(address)],
-		select: (data): TNormalizedBN => toNormalizedBN(data)
+		select: (data): TNormalizedBN => toNormalizedBN(data, 18)
 	});
 
 	const {data: earned, refetch: refetchEarned} = useContractRead({
@@ -209,7 +205,7 @@ export function FarmWithToken({
 		watch: true,
 		functionName: 'earned',
 		args: [toAddress(address)],
-		select: (data): TNormalizedBN => toNormalizedBN(data)
+		select: (data): TNormalizedBN => toNormalizedBN(data, 18)
 	});
 
 	useEffect((): void => {
@@ -306,7 +302,7 @@ export function FarmWithToken({
 				<AmountInput
 					amount={amountToStake}
 					maxAmount={availableToStake}
-					onAmountChange={(value): void => set_amountToStake(handleInputChangeEventValue(value, 18))}
+					onAmountChange={(value): void => set_amountToStake(handleInputChangeValue(value, 18))}
 					onLegendClick={(): void => set_amountToStake(availableToStake)}
 					onMaxClick={(): void => set_amountToStake(availableToStake)}
 					legend={
@@ -412,7 +408,7 @@ export function FarmWithToken({
 				<AmountInput
 					amount={amountToWithdraw}
 					maxAmount={staked}
-					onAmountChange={(value): void => set_amountToWithdraw(handleInputChangeEventValue(value, 18))}
+					onAmountChange={(value): void => set_amountToWithdraw(handleInputChangeValue(value, 18))}
 					onLegendClick={(): void => set_amountToWithdraw(staked)}
 					onMaxClick={(): void => set_amountToWithdraw(staked)}
 					legend={

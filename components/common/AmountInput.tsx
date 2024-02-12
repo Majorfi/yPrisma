@@ -1,8 +1,8 @@
+import {cl} from '@builtbymom/web3/utils';
 import {Renderable} from '@yearn-finance/web-lib/components/Renderable';
-import {cl} from '@yearn-finance/web-lib/utils/cl';
 
 import type {ReactElement} from 'react';
-import type {TNormalizedBN} from '@yearn-finance/web-lib/utils/format.bigNumber';
+import type {TNormalizedBN} from '@builtbymom/web3/types';
 
 type TAmountInputProps = {
 	amount: TNormalizedBN | undefined;

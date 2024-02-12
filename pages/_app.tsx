@@ -1,11 +1,12 @@
 import React from 'react';
 import localFont from 'next/font/local';
-import AppWrapper from 'components/common/AppWrapper';
-import {mainnet, optimism} from 'wagmi/chains';
-import {Analytics} from '@vercel/analytics/react';
-import {WithYearn} from '@yearn-finance/web-lib/contexts/WithYearn';
-import {cl} from '@yearn-finance/web-lib/utils/cl';
-import {localhost} from '@yearn-finance/web-lib/utils/wagmi/networks';
+import Header from 'components/common/Header';
+import Meta from 'components/common/Meta';
+import {WalletContextApp} from '@builtbymom/web3/contexts/useWallet';
+import {WithMom} from '@builtbymom/web3/contexts/WithMom';
+import {cl} from '@builtbymom/web3/utils/cl';
+import {localhost} from '@builtbymom/web3/utils/wagmi';
+import {arbitrum, base, fantom, mainnet, optimism, polygon} from '@wagmi/chains';
 
 import type {AppProps} from 'next/app';
 import type {ReactElement} from 'react';
@@ -34,6 +35,22 @@ const aeonik = localFont({
 	]
 });
 
+function AppWrapper(props: AppProps): ReactElement {
+	const {Component, pageProps, router} = props;
+
+	return (
+		<React.Fragment>
+			<Meta />
+			<Header />
+			<Component
+				key={router.pathname}
+				router={props.router}
+				{...pageProps}
+			/>
+		</React.Fragment>
+	);
+}
+
 function MyApp(props: AppProps): ReactElement {
 	return (
 		<>
@@ -44,19 +61,15 @@ function MyApp(props: AppProps): ReactElement {
 					font-family: ${aeonik.style.fontFamily};
 				}
 			`}</style>
-			<WithYearn
-				supportedChains={[mainnet, optimism, localhost]}
-				options={{
-					baseSettings: {
-						yDaemonBaseURI: process.env.YDAEMON_BASE_URI as string
-					},
-					ui: {shouldUseThemes: false}
-				}}>
-				<main className={cl('flex flex-col h-screen', aeonik.className)}>
-					<AppWrapper {...props} />
-				</main>
-			</WithYearn>
-			<Analytics />
+			<WithMom
+				supportedChains={[mainnet, optimism, polygon, fantom, base, arbitrum, localhost]}
+				tokenLists={['https://raw.githubusercontent.com/SmolDapp/tokenLists/main/lists/yearn.json']}>
+				<WalletContextApp>
+					<main className={cl('flex flex-col h-screen', aeonik.className)}>
+						<AppWrapper {...props} />
+					</main>
+				</WalletContextApp>
+			</WithMom>
 		</>
 	);
 }
