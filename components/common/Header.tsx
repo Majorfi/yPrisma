@@ -70,10 +70,10 @@ function WalletSelector(): ReactElement {
 					walletIdentity
 				) : (
 					<span>
-						<IconWallet className={'yearn--header-nav-item mt-0.5 block h-4 w-4 md:hidden'} />
+						<IconWallet className={'yearn--header-nav-item mt-0.5 block size-4 md:hidden'} />
 						<span
 							className={
-								'text-neutral-0 relative hidden h-8 cursor-pointer items-center justify-center rounded border border-transparent bg-neutral-900 px-2 text-xs font-normal transition-all hover:bg-neutral-800 md:flex'
+								'relative hidden h-8 cursor-pointer items-center justify-center rounded border border-transparent bg-neutral-900 px-2 text-xs font-normal text-neutral-0 transition-all hover:bg-neutral-800 md:flex'
 							}>
 							{'Connect wallet'}
 						</span>
@@ -98,7 +98,7 @@ function AppHeader(): ReactElement {
 	return (
 		<div
 			id={'head'}
-			className={'bg-neutral-0/95 fixed inset-x-0 top-0 z-50 w-full'}>
+			className={'fixed inset-x-0 top-0 z-50 w-full bg-neutral-0/95'}>
 			<div className={'mx-auto max-w-5xl !px-0'}>
 				<header className={'yearn--header'}>
 					<Navbar

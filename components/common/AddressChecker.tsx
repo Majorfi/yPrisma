@@ -56,7 +56,7 @@ function AddressChecker(props: {
 							className={'w-full min-w-[150px] cursor-alias whitespace-nowrap'}>
 							{'Check Proofs'}
 							<svg
-								className={'ml-2 h-4 w-4'}
+								className={'ml-2 size-4'}
 								viewBox={'0 0 98 96'}
 								xmlns={'http://www.w3.org/2000/svg'}>
 								<path

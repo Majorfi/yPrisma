@@ -28,13 +28,13 @@ export function ViewMigrationModal(): ReactElement {
 	return (
 		<>
 			<div className={'relative'}>
-				<span className={'absolute -right-1 -top-1 z-10 flex h-3 w-3'}>
+				<span className={'absolute -right-1 -top-1 z-10 flex size-3'}>
 					<span
 						className={
-							'absolute inline-flex h-full w-full animate-ping rounded-full bg-[rgb(236,184,64)] opacity-75'
+							'absolute inline-flex size-full animate-ping rounded-full bg-[rgb(236,184,64)] opacity-75'
 						}
 					/>
-					<span className={'relative inline-flex h-3 w-3 rounded-full bg-[rgb(236,184,64)]'}></span>
+					<span className={'relative inline-flex size-3 rounded-full bg-[rgb(236,184,64)]'}></span>
 				</span>
 				<button
 					onClick={(): void => set_shouldDisplayMigrateModal(true)}
