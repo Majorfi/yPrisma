@@ -78,7 +78,7 @@ function Index(): ReactElement {
 									</p>
 									<p>
 										{
-											"Note: this farm will eventually be superceeded by Yearn's permanant staking contract which is scheduled for audit. Find information "
+											"Note: this farm will eventually be superceeded by Yearn's permanent staking contract which is scheduled for audit. Find information "
 										}
 										<Link
 											href={'https://medium.com/iearn/yprisma-roadmap-8fb3e2376594'}
